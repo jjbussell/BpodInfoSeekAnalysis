@@ -14,6 +14,8 @@ load(fname);
 
 sessionSummary = {};
 sessionSummary{1} = filename;
+breaks = strfind(filename,'_');
+sessionSummary{2} = filename(breaks(2)+1:breaks(3)-1);
 
 %% SETTINGS
 settings=SessionData.SettingsFile.GUI;
