@@ -222,7 +222,7 @@ for ff = 1:numFiles
 %        if isrow(b.eventList)
 %            b.eventList = b.eventList'
 %        end
-       a.eventList = unique([a.eventList; b.eventList]);
+%        a.eventList = unique([a.eventList; b.eventList]);
        for s = 1:numel(stateList)
            if isfield(b,(stateList{s}))
                if isfield(a,(stateList{s}))
