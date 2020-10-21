@@ -297,7 +297,7 @@ for m = 1:a.mouseCt
         
         a.daySummary.trialCt{m,d} = sum(okAll);
         a.daySummary.totalCorrectTrials{m,d} = sum(a.correct(okAll));
-        a.daySummary.totalWater{m,d} = nansum(a.reward(okAll));
+        a.daySummary.totalWater{m,d} = sum(a.reward(okAll));
         
         a.daySummary.rxnInfoForced{m,d} = nanmean(a.rxn(a.infoForcedCorr & ok));
         a.daySummary.rxnInfoChoice{m,d} = nanmean(a.rxn(a.infoChoiceCorr & ok));

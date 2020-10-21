@@ -51,9 +51,9 @@ for t = 1:SessionData.nTrials
     infoSmallDrops(t,1) = SessionData.TrialSettings(t).InfoSmallDrops;
     randBigDrops(t,1) = SessionData.TrialSettings(t).RandBigDrops;
     randSmallDrops(t,1) = SessionData.TrialSettings(t).RandSmallDrops;
-    states = trialData(t).States;
-    events = trialData(t).Events;
-    centerEntries(t,1) = size(states.CenterDelay,1);
+    states{t} = trialData(t).States;
+    events{t} = trialData(t).Events;
+    centerEntries(t,1) = size(states{t}.CenterDelay,1);
 end
 
 %% TRIAL INITIATION
