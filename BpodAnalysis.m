@@ -159,6 +159,8 @@ a.choice_all(reverseFlag) = ~a.choice_all(reverseFlag);
 
 %% REACTION TIME AND TRIAL LENGTH
 
+% IN SECONDS
+
 a.rxn = a.choice-a.statesExpanded.GoCue(:,1);
 
 a.trialLengthTotal = a.endTime - a.startTime;
@@ -325,6 +327,42 @@ for m = 1:a.mouseCt
         a.daySummary.choiceCorr{m,d} = sum(ismember(outcomes,a.choiceCorrCodes))/(sum(ismember(outcomes,a.choiceCorrCodes))+sum(ismember(outcomes,a.choiceIncorrCodes)));                
         a.daySummary.choiceIncorr{m,d} = sum(ismember(outcomes,a.choiceIncorrCodes))/(sum(ismember(outcomes,a.choiceCorrCodes))+sum(ismember(outcomes,a.choiceIncorrCodes)));        
     
+    end
+end
+
+%% OUTCOME/COMPLETE/IN PORT
+
+for m = 1:a.mouseCt
+    ok = a.mice(:,m) == 1;
+    mouseOutcomes = a.outcome(ok);
+%     mouseInitialOutcomes = a.outcome(a.mice(:,m)==1 & a.reverse==1);
+    % info choice big
+    a.incomplete(m,1) =  sum(mouseOutcomes == 3)/sum(ismember(mouseOutcomes,[2 3]));
+    % info choice small
+    a.incomplete(m,2) =  sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
+    % rand choice big
+    a.incomplete(m,3) = sum(ismember(mouseOutcomes, [7]))/sum(ismember(mouseOutcomes, [6 7]));
+    % rand choice small
+    a.incomplete(m,4) =  sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
+    % info big
+    a.incomplete(m,5) =  sum(mouseOutcomes == 12)/sum(ismember(mouseOutcomes,[11 12]));    
+    % info small
+    a.incomplete(m,6) =  sum(mouseOutcomes == 14)/sum(ismember(mouseOutcomes,[13 14]));
+%     a.initialIncomplete(m,1) = sum(mouseInitialOutcomes == 14)/sum(ismember(mouseInitialOutcomes,[13 14]));
+    % rand big
+    a.incomplete(m,7) =  sum(mouseOutcomes == 18)/sum(ismember(mouseOutcomes,[17 18]));
+    % rand small
+    a.incomplete(m,8) =  sum(mouseOutcomes == 20)/sum(ismember(mouseOutcomes,[19 20]));
+    for d = 1:a.mouseDayCt(m)
+        mouseOutcomes = a.daySummary.outcome{m,d};
+        a.dayIncomplete{1,d,m} = sum(mouseOutcomes == 3)/sum(ismember(mouseOutcomes,[2 3]));
+        a.dayIncomplete{2,d,m} = sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
+        a.dayIncomplete{3,d,m} = sum(mouseOutcomes == 7)/sum(ismember(mouseOutcomes, [6 7]));
+        a.dayIncomplete{4,d,m} = sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
+        a.dayIncomplete{5,d,m} = sum(mouseOutcomes == 12)/sum(ismember(mouseOutcomes,[11 12]));    
+        a.dayIncomplete{6,d,m} = sum(mouseOutcomes == 14)/sum(ismember(mouseOutcomes,[13 14]));
+        a.dayIncomplete{7,d,m} = sum(mouseOutcomes == 18)/sum(ismember(mouseOutcomes,[17 18]));
+        a.dayIncomplete{8,d,m} = sum(mouseOutcomes == 20)/sum(ismember(mouseOutcomes,[19 20]));
     end
 end
 
