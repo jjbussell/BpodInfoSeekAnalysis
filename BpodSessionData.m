@@ -38,8 +38,8 @@ close all;
 
 %% LOAD DATA
 
-loadData = 1;
-% loadData = 0;
+% loadData = 1;
+loadData = 0;
 
 if loadData == 1
     fname = 'infoSeekBpodData.mat';
@@ -214,6 +214,7 @@ for ff = 1:numFiles
        a.mouse = [a.mouse; b.mouse];
        a.day = [a.day; b.day];
        a.trialSettings = [a.trialSettings; b.trialSettings];
+       
        a.trialType = [a.trialType; b.trialType];
        a.startTime = [a.startTime; b.startTime];
        a.endTime = [a.endTime; b.endTime];

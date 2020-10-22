@@ -20,6 +20,13 @@
 % day summary/errors by outcome/reward rate
 % add errors to day summary!
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  ANALYSIS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% EXPAND MULTIPLE STATE OCCURRANCES
 
 % state = a.WaitForCenter;
@@ -72,11 +79,14 @@ end
 %% INFOSIDE
 
 a.infoSide = [a.trialSettings.InfoSide]';
+a.trialTypes = [a.trialSettings.TrialTypes]';
 
 %% TRIAL COUNT
+
 a.trialCt = numel(a.trialType);
 
 %% DAY AND MOUSE
+
 a.day2 = reshape([a.day{:}],[8],[])';
 datevec=[a.files(:).date];
 a.fileDayCell=cellstr(reshape(datevec,[8],[])');
@@ -111,6 +121,7 @@ end
 for m = 1:a.mouseCt
     a.mouseTrialTypes{m,1} = a.fileTrialTypes(a.fileMouse == m);
 end
+
 %% INITIAL INFO SIDE
 
 % infoSide = 0, info left
@@ -123,7 +134,8 @@ for m = 1:a.mouseCt
     a.initinfoside_info(a.infoSide == a.initinfoside(m) & ok == 1) = 1;
 end
 
-%%
+%% CHOICE AND CHOICE TIME
+
 % choice is waitforodorleft,waitforodorright,incorrect,nochoice
 
 a.choice = NaN(a.trialCt,1);
@@ -143,7 +155,9 @@ a.choice(~isnan(a.rightChoice)) = a.rightChoice(~isnan(a.rightChoice));
 a.choice(~isnan(a.incorrectChoice)) = a.incorrectChoice(~isnan(a.incorrectChoice));
 a.choice(~isnan(a.noChoice)) = a.noChoice(~isnan(a.noChoice));
 
-%% INFO includes incorrect but not nochoice
+%% INFO (CHOICE OF INFO) includes incorrect but not nochoice
+
+% This is a.choiceCorr (but includes incorrect)
 
 a.info = NaN(a.trialCt,1);
 a.info((a.infoSide == 0) & ~isnan(a.leftChoice)) = 1;
@@ -302,7 +316,9 @@ for m = 1:a.mouseCt
         a.daySummary.trialCt{m,d} = sum(okAll);
         a.daySummary.totalCorrectTrials{m,d} = sum(a.correct(okAll));
         a.daySummary.totalWater{m,d} = sum(a.reward(okAll));
-        
+        a.daySummary.percentInfo{m,d} = nanmean(a.infoCorrTrials(ok & a.trialType == 1 & a.correct == 1 & a.trialTypes == 5));
+        a.daySummary.percentIIS{m,d} = nanmean(a.choice_all(ok & a.trialType == 1 & a.correct == 1 & a.trialTypes == 5));
+                
         a.daySummary.rxnInfoForced{m,d} = nanmean(a.rxn(a.infoForcedCorr & ok));
         a.daySummary.rxnInfoChoice{m,d} = nanmean(a.rxn(a.infoChoiceCorr & ok));
         a.daySummary.rxnRandForced{m,d} = nanmean(a.rxn(a.randForcedCorr & ok));
@@ -330,7 +346,7 @@ for m = 1:a.mouseCt
     end
 end
 
-%% OUTCOME/COMPLETE/IN PORT
+%% COMPLETE/IN PORT
 
 for m = 1:a.mouseCt
     ok = a.mice(:,m) == 1;
@@ -368,7 +384,7 @@ end
 
 %%
 save('infoSeekBpodDataAnalyzed.mat','a');
-% uisave({'a'},'infoSeekFSMData.mat');
+% uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
 save(['infoSeekFSMBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
 
