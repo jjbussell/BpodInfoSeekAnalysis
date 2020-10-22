@@ -284,7 +284,9 @@ end
 for m = 1:a.mouseCt
     for d = 1:a.mouseDayCt(m)
         ok = a.mouseDay == d & a.mice(:,m) == 1 & a.correct == 1;
-        okAll = a.mouseDay == d & a.mice(:,m) == 1;        
+        okAll = a.mouseDay == d & a.mice(:,m) == 1; 
+        a.daySummary.mouse{m,d} = m;
+        a.daySummary.day{m,d} = d;
         a.daySummary.outcome{m,d} = a.outcome(okAll ==1);    
         a.daySummary.infoForced{m,d} = sum(a.infoForcedCorr(ok));
         a.daySummary.infoChoice{m,d} = sum(a.infoChoiceCorr(ok));
