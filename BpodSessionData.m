@@ -283,7 +283,7 @@ save(['infoSeekFSMBpodData' datestr(now,'yyyymmdd')],'a');
 save('infoSeekBpodData.mat','a');
 % uisave({'a'},'infoSeekFSMData.mat');
 
-save(['infoSeekFSMBpodData' datestr(now,'yyyymmdd')],'a');
+save(['infoSeekBpodData' datestr(now,'yyyymmdd')],'a');
 
 
 
