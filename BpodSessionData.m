@@ -38,8 +38,8 @@ close all;
 
 %% LOAD DATA
 
-% loadData = 1;
-loadData = 0;
+loadData = 1;
+% loadData = 0;
 
 if loadData == 1
     fname = 'infoSeekBpodData.mat';
@@ -283,7 +283,7 @@ save(['infoSeekFSMBpodData' datestr(now,'yyyymmdd')],'a');
 save('infoSeekBpodData.mat','a');
 % uisave({'a'},'infoSeekFSMData.mat');
 
-save(['infoSeekFSMBpodData' datestr(now,'yyyymmdd')],'a');
+save(['infoSeekBpodData' datestr(now,'yyyymmdd')],'a');
 
 
 

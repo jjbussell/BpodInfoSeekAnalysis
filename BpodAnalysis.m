@@ -386,5 +386,5 @@ end
 save('infoSeekBpodDataAnalyzed.mat','a');
 % uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
-save(['infoSeekFSMBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
+save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
 
