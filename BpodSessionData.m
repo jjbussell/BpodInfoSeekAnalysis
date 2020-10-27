@@ -126,6 +126,7 @@ for ff = 1:numFiles
        b.mouse(t,1) = mouse;
        b.day(t,1) = day;
     end
+    
     b.trialSettings = [SessionData.TrialSettings(:)];
 %     b.trialSettings = [settings{:}]';
     b.trialType = SessionData.TrialTypes';

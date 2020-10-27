@@ -35,7 +35,7 @@
 for s = 1:numel(a.stateList)
 
     statename = a.stateList{s};
-    state = a.(stateList{s});
+    state = a.(a.stateList{s});
 % multicheck = cell2mat(cellfun(@(x) size(x,1),state,'UniformOutput',false));
 % if(sum(multicheck>1)>0)
 %     multistates = 1
@@ -382,9 +382,102 @@ for m = 1:a.mouseCt
     end
 end
 
+
+%% PORT OCCUPANCY
+
+win = 0.050; % bins in ms
+bins = [0:win:15000];
+
+portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
+
+for p = 1:numel(portnames)
+    portname = portnames{p};
+    port = a.(portname);
+    maxLength = max(cellfun(@numel,port));
+    result=cellfun(@(x) [reshape(x,1,[]),NaN(1,maxLength-numel(x))],port,'UniformOutput',false);
+    result2=vertcat(result{:});
+    a.([portname,'Exp']) = result2;
+    result = [];
+    result2 = [];
+end
+
+portInNames = {'Port1InExp','Port2InExp','Port3InExp'};
+portOutNames = {'Port1OutExp','Port2OutExp','Port3OutExp'};
+portMeanNames = {'meanPort1Dwell','meanPort2Dwell','meanPort3Dwell'};
+portDwellNames = {'port1Dwell','port2Dwell','port3Dwell'};
+for p = 1:3
+    inCounts = [];outCounts=[];moreOuts=[];moreIns=[];
+    portInname = portInNames{p}; portOutname = portOutNames{p}; portMeanName = portMeanNames{p};
+    portDwellName = portDwellNames{p};
+    if size(a.(portOutname),2)~=size(a.(portInname),2)
+       if  size(a.(portOutname),2)>size(a.(portInname),2)
+          a.(portInname)(:,end+1) = NaN; 
+       else
+           a.(portOutname)(:,end+1) = NaN;
+       end
+    end
+    
+    
+    inCounts = sum(~isnan(a.(portInname)),2);
+    outCounts = sum(~isnan(a.(portOutname)),2);
+    moreOuts = find((outCounts-inCounts)>0);
+    moreIns = find((outCounts-inCounts)<0);
+    a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end);
+    for m = 1:numel(moreIns)
+        noExit = outCounts(moreIns(m))+1; 
+        a.(portOutname)(moreIns(m),noExit) = a.statesExpanded.InterTrialInterval(moreIns(m),2);
+    end
+    a.(portDwellName) = (a.(portOutname)(:)) - (a.(portInname)(:));
+    a.(portMeanName) = mean((a.(portOutname)(:)) - (a.(portInname)(:)),'omitnan');   
+end
+
+%% WHY ARE THERE NEGATIVE DWELLS?>?>?>?
+
+
+% centerDwell = a.Port2OutExp-a.Port2InExp;
+% 
+% centerOutMask = ~isnan(a.Port2OutExp);
+% centerIns = a.Port2InExp(centerOutMask);
+% centerOuts = a.Port2InExp(centerOutMask);
+% centerDwell = centerOuts-centerIns;
+% meanCenterDwell = nanmean(centerDwell);
 %%
 save('infoSeekBpodDataAnalyzed.mat','a');
 % uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
 save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
