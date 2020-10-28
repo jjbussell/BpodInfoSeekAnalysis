@@ -1,3 +1,16 @@
+%%
+%{
+
+expand states and events for each file at session data time
+within those, set all timestamps relative to session start
+fix entries/exits around session not trial!
+then, in analysis, can place within trial bins and set bins to 1 or 0
+
+%}
+
+
+
+%%
 % check control sums, reward rates
 % be sure counting incorrect, nochoice, NP trials correctly! are they
 % "correct"? are they included in info, info big, etc??
@@ -401,6 +414,15 @@ for p = 1:numel(portnames)
     result2 = [];
 end
 
+% mouse may already be in a port at trial start -- condition
+% mouse may be in port when trial ends
+% mouse may be in port when file ends
+
+% these all will make either the number of entries or exits not match
+% OR exits come after entries in time
+
+
+
 portInNames = {'Port1InExp','Port2InExp','Port3InExp'};
 portOutNames = {'Port1OutExp','Port2OutExp','Port3OutExp'};
 portMeanNames = {'meanPort1Dwell','meanPort2Dwell','meanPort3Dwell'};
@@ -409,6 +431,7 @@ for p = 1:3
     inCounts = [];outCounts=[];moreOuts=[];moreIns=[];
     portInname = portInNames{p}; portOutname = portOutNames{p}; portMeanName = portMeanNames{p};
     portDwellName = portDwellNames{p};
+    % if expanded array has different max events
     if size(a.(portOutname),2)~=size(a.(portInname),2)
        if  size(a.(portOutname),2)>size(a.(portInname),2)
           a.(portInname)(:,end+1) = NaN; 
@@ -417,16 +440,22 @@ for p = 1:3
        end
     end
     
-    
+    alreadyIn = a.(portOutname)(:,1)-a.(portInname)(:,1)<0;
+
     inCounts = sum(~isnan(a.(portInname)),2);
     outCounts = sum(~isnan(a.(portOutname)),2);
-    moreOuts = find((outCounts-inCounts)>0);
+    moreOuts = find((outCounts-inCounts)>0); % extra leaving because mouse was already 
     moreIns = find((outCounts-inCounts)<0);
-    a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end);
+    a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end); % if more outs,
     for m = 1:numel(moreIns)
         noExit = outCounts(moreIns(m))+1; 
         a.(portOutname)(moreIns(m),noExit) = a.statesExpanded.InterTrialInterval(moreIns(m),2);
     end
+    
+    
+    noMatch = ~(a.(portOutname)>a.(portInname));
+    noMatch(and(isnan(a.(portOutname)),isnan(a.(portInname))))=0;    
+    
     a.(portDwellName) = (a.(portOutname)(:)) - (a.(portInname)(:));
     a.(portMeanName) = mean((a.(portOutname)(:)) - (a.(portInname)(:)),'omitnan');   
 end

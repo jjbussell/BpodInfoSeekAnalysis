@@ -28,7 +28,7 @@ load in files, record names, store date, mouse, protocol, time, ntrials as
 metadata and rawevents (a.files with length of numfiles)
 
 
-%}
+%}git pull
 
 
 %%
