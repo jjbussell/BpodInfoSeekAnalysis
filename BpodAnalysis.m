@@ -399,7 +399,7 @@ end
 %% PORT OCCUPANCY
 
 win = 0.050; % bins in ms
-bins = [0:win:15000];
+bins = [-1000:win:15000];
 
 portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
 
@@ -421,16 +421,22 @@ end
 % these all will make either the number of entries or exits not match
 % OR exits come after entries in time
 
+% if mouse in port at trial start, first in>first out-->set first in to
+% trial start and slide over
+% if mouse in port when trial ends, fewer outs than ins-->add out = trial
+% end
 
 
 portInNames = {'Port1InExp','Port2InExp','Port3InExp'};
 portOutNames = {'Port1OutExp','Port2OutExp','Port3OutExp'};
 portMeanNames = {'meanPort1Dwell','meanPort2Dwell','meanPort3Dwell'};
 portDwellNames = {'port1Dwell','port2Dwell','port3Dwell'};
+portNames = {'Port1','Port2','Port3'};
 for p = 1:3
     inCounts = [];outCounts=[];moreOuts=[];moreIns=[];
     portInname = portInNames{p}; portOutname = portOutNames{p}; portMeanName = portMeanNames{p};
     portDwellName = portDwellNames{p};
+    
     % if expanded array has different max events
     if size(a.(portOutname),2)~=size(a.(portInname),2)
        if  size(a.(portOutname),2)>size(a.(portInname),2)
@@ -439,37 +445,54 @@ for p = 1:3
            a.(portOutname)(:,end+1) = NaN;
        end
     end
+    a.(portInname)(:,end+1) = NaN;
+    a.(portOutname)(:,end+1) = NaN;
     
-    alreadyIn = a.(portOutname)(:,1)-a.(portInname)(:,1)<0;
-
-    inCounts = sum(~isnan(a.(portInname)),2);
-    outCounts = sum(~isnan(a.(portOutname)),2);
-    moreOuts = find((outCounts-inCounts)>0); % extra leaving because mouse was already 
-    moreIns = find((outCounts-inCounts)<0);
-    a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end); % if more outs,
-    for m = 1:numel(moreIns)
-        noExit = outCounts(moreIns(m))+1; 
-        a.(portOutname)(moreIns(m),noExit) = a.statesExpanded.InterTrialInterval(moreIns(m),2);
+    %already In
+    alreadyIn = find(a.(portOutname)(:,1)-a.(portInname)(:,1)<0);
+    for i = 1:numel(alreadyIn)
+       a.(portInname)(alreadyIn(i),2:end) = a.(portInname)(alreadyIn(i),1:end-1);
+       a.(portInname)(alreadyIn(i),1) = 0;
     end
     
+    % no exit
+    inCounts = sum(~isnan(a.(portInname)),2);
+    outCounts = sum(~isnan(a.(portOutname)),2);
+    moreIns = find((outCounts-inCounts)<0);
+%     a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end); % if more outs,
+    for m = 1:numel(moreIns)
+        noExit = outCounts(moreIns(m))+1; 
+        a.(portOutname)(moreIns(m),noExit) = a.endTime(moreIns(m)) - a.startTime(moreIns(m));
+    end    
     
+    % already in but nothing to subtract
+    inCounts = sum(~isnan(a.(portInname)),2);
+    outCounts = sum(~isnan(a.(portOutname)),2);
+    moreOuts = find((outCounts-inCounts)>0); % extra leaving because mouse was already in port at start
+    for m = 1:numel(moreOuts)
+        a.(portInname)(moreOuts(m),inCounts(moreOuts(m))+1) = 0;
+    end
+        
     noMatch = ~(a.(portOutname)>a.(portInname));
-    noMatch(and(isnan(a.(portOutname)),isnan(a.(portInname))))=0;    
+    noMatch(and(isnan(a.(portOutname)),isnan(a.(portInname))))=0;
     
     a.(portDwellName) = (a.(portOutname)(:)) - (a.(portInname)(:));
-    a.(portMeanName) = mean((a.(portOutname)(:)) - (a.(portInname)(:)),'omitnan');   
+    a.(portMeanName) = mean((a.(portOutname)(:)) - (a.(portInname)(:)),'omitnan');
+    
+    a.(portNames{p}) = zeros(numel(a.file),numel(bins));
+
+    % NEED TO CHANGE THESE TIMES TO BE RELATIVE TO GO CUE!
+    for t = 1:numel(a.file)
+       entries = a.(portInname)(t,~isnan(a.(portInname)(t,:)))-a.statesExpanded.GoCue(t,2);
+       exits = a.(portOutname)(t,~isnan(a.(portOutname)(t,:)))-a.statesExpanded.GoCue(t,2);
+       for e = 1:numel(entries)
+           binIn = find(bins-entries(e)>0,1);
+           binOut = find(bins-exits(e)>0,1)-1;
+           a.(portNames{p})(t,(binIn:binOut))=1;
+       end
+    end        
 end
 
-%% WHY ARE THERE NEGATIVE DWELLS?>?>?>?
-
-
-% centerDwell = a.Port2OutExp-a.Port2InExp;
-% 
-% centerOutMask = ~isnan(a.Port2OutExp);
-% centerIns = a.Port2InExp(centerOutMask);
-% centerOuts = a.Port2InExp(centerOutMask);
-% centerDwell = centerOuts-centerIns;
-% meanCenterDwell = nanmean(centerDwell);
 %%
 save('infoSeekBpodDataAnalyzed.mat','a');
 % uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
