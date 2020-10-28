@@ -421,6 +421,10 @@ end
 % these all will make either the number of entries or exits not match
 % OR exits come after entries in time
 
+% if mouse in port at trial start, first in>first out-->set first in to
+% trial start and slide over
+% if mouse in port when trial ends, fewer outs than ins-->add out = trial
+% end
 
 
 portInNames = {'Port1InExp','Port2InExp','Port3InExp'};
@@ -431,6 +435,7 @@ for p = 1:3
     inCounts = [];outCounts=[];moreOuts=[];moreIns=[];
     portInname = portInNames{p}; portOutname = portOutNames{p}; portMeanName = portMeanNames{p};
     portDwellName = portDwellNames{p};
+    
     % if expanded array has different max events
     if size(a.(portOutname),2)~=size(a.(portInname),2)
        if  size(a.(portOutname),2)>size(a.(portInname),2)
@@ -439,14 +444,20 @@ for p = 1:3
            a.(portOutname)(:,end+1) = NaN;
        end
     end
+    a.(portInname)(:,end+1) = NaN;
+    a.(portOutname)(:,end+1) = NaN;
     
-    alreadyIn = a.(portOutname)(:,1)-a.(portInname)(:,1)<0;
+    alreadyIn = find(a.(portOutname)(:,1)-a.(portInname)(:,1)<0);
+    for i = 1:numel(alreadyIn)
+       a.(portInname)(alreadyIn(i),2:end) = a.(portInname)(alreadyIn(i),1:end-1);
+       a.(portInname)(alreadyIn(i),1) = 0;
+    end
 
     inCounts = sum(~isnan(a.(portInname)),2);
     outCounts = sum(~isnan(a.(portOutname)),2);
     moreOuts = find((outCounts-inCounts)>0); % extra leaving because mouse was already 
     moreIns = find((outCounts-inCounts)<0);
-    a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end); % if more outs,
+%     a.(portOutname)(moreOuts,1:end-1) = a.(portOutname)(moreOuts,2:end); % if more outs,
     for m = 1:numel(moreIns)
         noExit = outCounts(moreIns(m))+1; 
         a.(portOutname)(moreIns(m),noExit) = a.statesExpanded.InterTrialInterval(moreIns(m),2);

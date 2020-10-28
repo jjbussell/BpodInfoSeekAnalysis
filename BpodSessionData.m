@@ -28,7 +28,7 @@ load in files, record names, store date, mouse, protocol, time, ntrials as
 metadata and rawevents (a.files with length of numfiles)
 
 
-%}git pull
+%}
 
 
 %%
@@ -188,24 +188,16 @@ for ff = 1:numFiles
         for s = 1:numel(stateList)
             if isfield(b.trialData(t).States,(stateList{s}))
                 b.(stateList{s}){t,1} = b.trialData(t).States.(stateList{s});
-%                 b.(stateList{s}){t,2} = t;
-%                 b.(stateList{s}){t,3} = f;
             else
                 b.(stateList{s}){t,1} = [];
-%                 b.(stateList{s}){t,2} = t;
-%                 b.(stateList{s}){t,3} = f;
             end
         end
 
         for e = 1:numel(eventList)
             if isfield(b.trialData(t).Events,(eventList{e}))
                 b.(eventList{e}){t,1} = b.trialData(t).Events.(eventList{e});
-%                 b.(eventList{e}){t,2} = t;
-%                 b.(eventList{e}){t,3} = f;
             else
                b.(eventList{e}){t,1} = [];
-%                b.(eventList{e}){t,2} = t;
-%                b.(eventList{e}){t,3} = f; 
             end
         end
     end
