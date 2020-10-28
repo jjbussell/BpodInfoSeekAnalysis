@@ -126,6 +126,12 @@ for ff = 1:numFiles
        b.mouse(t,1) = mouse;
        b.day(t,1) = day;
     end
+    
+    if numel(SessionData.TrialSettings)~=SessionData.nTrials
+%         print('trial settings error ');
+        filename
+    end
+        
     b.trialSettings = [SessionData.TrialSettings(:)];
 %     b.trialSettings = [settings{:}]';
     b.trialType = SessionData.TrialTypes';
@@ -255,10 +261,10 @@ else
     a.files = [a.files; session];
 end
 
-save('infoSeekBpodData.mat','a');
-% uisave({'a'},'infoSeekFSMData.mat');
-
-save(['infoSeekFSMBpodData' datestr(now,'yyyymmdd')],'a');
+% save('infoSeekBpodData.mat','a');
+% % uisave({'a'},'infoSeekFSMData.mat');
+% 
+% save(['infoSeekFSMBpodData' datestr(now,'yyyymmdd')],'a');
 
 
 %%
