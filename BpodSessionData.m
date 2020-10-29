@@ -182,9 +182,12 @@ for ff = 1:numFiles
             'EndTrial'};
         b.stateList = stateList;
     
-
-    eventList = session(ff).eventNames;
-    b.eventList = eventList;
+    % make sure saving all event names, change events to break out to
+    % select list, then expand those
+    % when expanding states, delete unexpanded
+%     b.eventList = session(ff).eventNames;
+    eventList = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End',...
+        'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
     for t = 1:SessionData.nTrials
         for s = 1:numel(stateList)
             if isfield(b.trialData(t).States,(stateList{s}))
@@ -237,9 +240,10 @@ for ff = 1:numFiles
                end
            end
        end
-       allEvents = unique([[session(:).eventNames] eventList]);
-       for e = 1:numel(allEvents)
-           event = allEvents{e};
+%        allEvents = unique([[session(:).eventNames] eventList]);
+       a.eventList = unique([session(:).eventNames]);
+       for e = 1:numel(a.eventList)
+           event = a.eventList{e};
            if isfield(b,(event))
                if isfield(a,(event))
                     a.(event) = [a.(event); b.(event)];
