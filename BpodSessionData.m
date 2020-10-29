@@ -140,7 +140,7 @@ for ff = 1:numFiles
     b.outcome = SessionData.Outcomes';
     trialData = [SessionData.RawEvents(:).Trial];
     b.trialData = [trialData{:}]';
-    b.file2(1:numel(b.trialType)) = f;
+    b.file2(1:numel(b.trialType),1) = f;
     
     
     % STATES
