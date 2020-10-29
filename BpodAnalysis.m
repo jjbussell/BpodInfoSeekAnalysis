@@ -1,37 +1,8 @@
 %%
-%{
 
-expand states and events for each file at session data time
-within those, set all timestamps relative to session start
-fix entries/exits around session not trial!
-then, in analysis, can place within trial bins and set bins to 1 or 0
-
-%}
-
-
-
-%%
-% check control sums, reward rates
-% be sure counting incorrect, nochoice, NP trials correctly! are they
-% "correct"? are they included in info, info big, etc??
-
-
-% assign day and mouse and infoside and correct and choice and trial type to each trial
-% calc reaction time
-% calc trial length
-% calc water
-% day summary: outcomes, (rewards, reward rt, rxn, error) by type, num
-% trials by type, % correct, % correct initiation, % choice
-
-% LATER
 % reversals
 % stats
-% leaving/entries/dwell time
-% prob of in port
 % LICKS!!!!
-
-% day summary/errors by outcome/reward rate
-% add errors to day summary!
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
