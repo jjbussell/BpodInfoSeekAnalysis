@@ -1,7 +1,7 @@
 %%
 
-% reversals
-% stats
+% reversals/choices
+% stats/choices
 % LICKS!!!!
 
 
