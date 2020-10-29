@@ -140,6 +140,7 @@ for ff = 1:numFiles
     b.outcome = SessionData.Outcomes';
     trialData = [SessionData.RawEvents(:).Trial];
     b.trialData = [trialData{:}]';
+    b.file2(1:numel(b.trialType)) = f;
     
     
     % STATES
@@ -208,6 +209,11 @@ for ff = 1:numFiles
         a = b;
         
     else
+        if isfield(a,'file2') == 0
+            a.file2 = b.file2;
+        else
+            a.file2 = [a.file2; b.file2];
+        end
        a.file = [a.file; b.file];
        a.mouse = [a.mouse; b.mouse];
        a.day = [a.day; b.day];
@@ -252,6 +258,7 @@ if isfield(a,'files') == 0
 else       
     a.files = [a.files; session];
 end
+
 
 % save('infoSeekBpodData.mat','a');
 % % uisave({'a'},'infoSeekFSMData.mat');
