@@ -31,7 +31,8 @@ for s = 1:numel(a.stateList)
     result2=vertcat(result{:});
 
 %     statename='WaitForOdorLeft';
-    a.statesExpanded.(statename) = result2;
+    state = [];
+    a.(statename) = result2;
     result = [];
     result2 = [];
 end
@@ -39,9 +40,11 @@ end
 
 %% EXPAND EVENTS
 
-eventsToExpand = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End','GlobalTimer4_End'};
-% eventList = a.eventList;
-eventList = eventsToExpand;
+% eventsToExpand = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End','GlobalTimer4_End'};
+% % eventList = a.eventList;
+% eventList = eventsToExpand;
+eventList = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End',...
+    'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
 
 for e = 1:numel(eventList)
 
@@ -54,7 +57,8 @@ for e = 1:numel(eventList)
     result2=vertcat(result{:});
 
 %     statename='WaitForOdorLeft';
-    a.eventsExpanded.(eventname) = result2;
+    event = [];
+    a.(eventname) = result2;
     result = [];
     result2 = [];
 end
@@ -124,10 +128,10 @@ end
 
 a.choice = NaN(a.trialCt,1);
 
-a.leftChoice = a.statesExpanded.WaitForOdorLeft(:,1);
-a.rightChoice = a.statesExpanded.WaitForOdorRight(:,1);
-a.incorrectChoice = a.statesExpanded.Incorrect(:,1);
-a.noChoice = a.statesExpanded.NoChoice(:,1);
+a.leftChoice = a.WaitForOdorLeft(:,1);
+a.rightChoice = a.WaitForOdorRight(:,1);
+a.incorrectChoice = a.Incorrect(:,1);
+a.noChoice = a.NoChoice(:,1);
 a.incorrect = ~isnan(a.incorrectChoice);
 
 % CORRECT = CHOSE CORRECTLY (includes NP but not no choice or incorrect)
@@ -159,11 +163,11 @@ a.choice_all(reverseFlag) = ~a.choice_all(reverseFlag);
 
 % IN SECONDS
 
-a.rxn = a.choice-a.statesExpanded.GoCue(:,1);
+a.rxn = a.choice-a.GoCue(:,1);
 
 a.trialLengthTotal = a.endTime - a.startTime;
-a.trialLength = a.endTime - a.statesExpanded.GoCue(:,1) + a.startTime;
-a.trialLengthCenterEntry = a.endTime - a.statesExpanded.CenterDelay(:,1) + a.startTime;
+a.trialLength = a.endTime - a.GoCue(:,1) + a.startTime;
+a.trialLengthCenterEntry = a.endTime - a.CenterDelay(:,1) + a.startTime;
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -205,7 +209,7 @@ a.randCorrTrials = a.info == 0 & a.correct == 1;
 
 %% ERRORS
 
-a.centerEntryCount = sum(~isnan(a.statesExpanded.CenterOdor),2)/2;
+a.centerEntryCount = sum(~isnan(a.CenterOdor),2)/2;
 a.completeInitiation = a.centerEntryCount == 1;
 
 % doesn't include NP (NP info small is not an error)
@@ -454,8 +458,8 @@ for p = 1:3
 
     % NEED TO CHANGE THESE TIMES TO BE RELATIVE TO GO CUE!
     for t = 1:numel(a.file)
-       entries = a.(portInname)(t,~isnan(a.(portInname)(t,:)))-a.statesExpanded.GoCue(t,2);
-       exits = a.(portOutname)(t,~isnan(a.(portOutname)(t,:)))-a.statesExpanded.GoCue(t,2);
+       entries = a.(portInname)(t,~isnan(a.(portInname)(t,:)))-a.GoCue(t,2);
+       exits = a.(portOutname)(t,~isnan(a.(portOutname)(t,:)))-a.GoCue(t,2);
        for e = 1:numel(entries)
            binIn = find(bins-entries(e)>0,1);
            binOut = find(bins-exits(e)>0,1)-1;
