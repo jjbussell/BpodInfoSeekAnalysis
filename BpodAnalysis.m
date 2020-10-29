@@ -1,37 +1,8 @@
 %%
-%{
 
-expand states and events for each file at session data time
-within those, set all timestamps relative to session start
-fix entries/exits around session not trial!
-then, in analysis, can place within trial bins and set bins to 1 or 0
-
-%}
-
-
-
-%%
-% check control sums, reward rates
-% be sure counting incorrect, nochoice, NP trials correctly! are they
-% "correct"? are they included in info, info big, etc??
-
-
-% assign day and mouse and infoside and correct and choice and trial type to each trial
-% calc reaction time
-% calc trial length
-% calc water
-% day summary: outcomes, (rewards, reward rt, rxn, error) by type, num
-% trials by type, % correct, % correct initiation, % choice
-
-% LATER
 % reversals
 % stats
-% leaving/entries/dwell time
-% prob of in port
 % LICKS!!!!
-
-% day summary/errors by outcome/reward rate
-% add errors to day summary!
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -399,7 +370,7 @@ end
 %% PORT OCCUPANCY
 
 win = 0.050; % bins in ms
-bins = [-1000:win:15000];
+bins = [-1:win:15];
 
 portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
 
@@ -492,6 +463,18 @@ for p = 1:3
        end
     end        
 end
+
+%% PORTS BY INFO VS RANDOM
+
+a.infoPort = zeros(size(a.Port2));
+a.randPort = zeros(size(a.Port2));
+infoLeft = a.infoSide == 0;
+infoRight = a.infoSide == 1;
+
+a.infoPort(infoLeft,:) = a.Port1(infoLeft,:);
+a.infoPort(infoRight,:) = a.Port3(infoRight,:);
+a.randPort(infoLeft,:) = a.Port3(infoLeft,:);
+a.randPort(infoRight,:) = a.Port1(infoRight,:);
 
 %%
 save('infoSeekBpodDataAnalyzed.mat','a');
