@@ -399,7 +399,7 @@ end
 %% PORT OCCUPANCY
 
 win = 0.050; % bins in ms
-bins = [-1000:win:15000];
+bins = [-1:win:15];
 
 portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
 
@@ -492,6 +492,18 @@ for p = 1:3
        end
     end        
 end
+
+%% PORTS BY INFO VS RANDOM
+
+a.infoPort = zeros(size(a.Port2));
+a.randPort = zeros(size(a.Port2));
+infoLeft = a.infoSide == 0;
+infoRight = a.infoSide == 1;
+
+a.infoPort(infoLeft,:) = a.Port1(infoLeft,:);
+a.infoPort(infoRight,:) = a.Port3(infoRight,:);
+a.randPort(infoLeft,:) = a.Port3(infoLeft,:);
+a.randPort(infoRight,:) = a.Port1(infoRight,:);
 
 %%
 save('infoSeekBpodDataAnalyzed.mat','a');

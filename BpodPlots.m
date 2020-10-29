@@ -48,6 +48,15 @@ CCNP = [0.474509803921569,0.125490196078431,0.768627450980392; %choice info big
     0,0,1; %rand big
     0,1,1]; %rand small
 
+CCtype = [grey; purple; orange;...
+    0,1,0; %info big
+    1,0,1; %infosmall
+    0,0,1; %rand big
+    0,1,1];
+
+a.typeLabels = {'Choice','Info','No Info','Info Water',...
+    'Info No Water','No Info Water','No Info No Water'};
+
 a.choiceLabels = {'ChoiceInfoBig','ChoiceInfoSmall','ChoiceRandBig',...
     'ChoiceRandSmall','InfoBig','InfoSmall','RandBig','RandSmall'};
 
@@ -140,7 +149,7 @@ for m = 1:a.mouseCt
 %     end
     ylabel({'Reaction', 'Time (s)'});
     xlabel('Day');    
-    leg = legend(ax,['Info' newline '-Forced'],['Info' newline '-Choice'],['No Info' newline '-Forced'],['No Info' newline '-Choice'],'Location','southoutside','Orientation','horizontal');
+    leg = (ax,['Info' newline '-Forced'],['Info' newline '-Choice'],['No Info' newline '-Forced'],['No Info' newline '-Choice'],'Location','southoutside','Orientation','horizontal');
     leg.Box = 'off';
     leg.FontWeight = 'bold';
     hold off;
@@ -249,6 +258,64 @@ for m = 1:a.mouseCt
     saveas(fig,fullfile(pathname,a.mouseList{m}),'pdf');
 %     close(fig);
     
+end
+
+%% PORT PROBABILITY
+
+for m = 1:a.mouseCt
+    figure();
+    fig = gcf;
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0.5 0.5 10 7];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','portrait');
+    
+    ax = nsubplot(3,1,1,1);
+    title([a.mouseList(m) ' Probability in port by trial type']);
+    ax.FontSize = 8;
+    ylabel('CENTER port');
+    plot(bins,mean(a.Port2(a.trialType==1 & a.mice(:,m)==1,:)),'Color',grey,'LineWidth',2);
+    plot(bins,mean(a.Port2(a.trialType==2 & a.mice(:,m)==1,:)),'Color',purple,'LineWidth',2);
+    plot(bins,mean(a.Port2(a.trialType==3 & a.mice(:,m)==1,:)),'Color',orange,'LineWidth',2);    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+%     xlabel('Time relative to go cue (s)');
+    
+    ax = nsubplot(3,1,2,1);
+    ax.FontSize = 8;
+    ylabel('INFO port');
+    plot(bins,mean(a.infoPort(a.infoBig==1 & a.mice(:,m)==1,:)),'Color','g','LineWidth',2);
+    plot(bins,mean(a.infoPort(a.infoSmall==1 & a.mice(:,m)==1,:)),'Color','m','LineWidth',2); 
+    plot(bins,mean(a.infoPort(a.randBig==1 & a.mice(:,m)==1,:)),'Color','b','LineWidth',2);
+    plot(bins,mean(a.infoPort(a.randSmall==1 & a.mice(:,m)==1,:)),'Color','c','LineWidth',2);    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+%     xlabel('Time relative to go cue (s)');
+
+    ax = nsubplot(3,1,3,1);
+    ax.FontSize = 8;
+    ylabel('NO INFO port');
+    plot(bins,mean(a.randPort(a.infoBig==1 & a.mice(:,m)==1,:)),'Color','g','LineWidth',2);
+    plot(bins,mean(a.randPort(a.infoSmall==1 & a.mice(:,m)==1,:)),'Color','m','LineWidth',2); 
+    plot(bins,mean(a.randPort(a.randBig==1 & a.mice(:,m)==1,:)),'Color','b','LineWidth',2);
+    plot(bins,mean(a.randPort(a.randSmall==1 & a.mice(:,m)==1,:)),'Color','c','LineWidth',2);    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+    xlabel('Time relative to go cue (s)');
+    
+    ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
+    h_for_legend=[];
+    hold on;
+    for i = 1:7
+        h_for_legend(end+1) = plot(ha,0,0, 'color',CCtype(i,:),'linewidth',2);
+    end
+    hold off;
+
+    leg = legend(h_for_legend,a.typeLabels,'Location','south','Orientation','horizontal');
+    legend('boxoff');
+%     text(0.51,0.98,[a.mouseList{m} ' Choice of Side'],'FontSize',14,'FontWeight','bold','HorizontalAlignment','center');        
+      
+    saveas(fig,fullfile(pathname,['portdwell' a.mouseList{m}]),'pdf');
 end
 
 
