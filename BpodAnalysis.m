@@ -254,11 +254,11 @@ a.infoSmallReward = [a.trialSettings.InfoSmallDrops]' * 4;
 a.randBigReward = [a.trialSettings.RandBigDrops]' * 4;
 a.randSmallReward = [a.trialSettings.RandSmallDrops]' * 4;
 
-a.leftDrops = a.eventsExpanded.GlobalTimer3_End - a.eventsExpanded.GlobalTimer3_Start;
+a.leftDrops = a.GlobalTimer3_End - a.GlobalTimer3_Start;
 a.leftRewardDrops = NaN(size(a.leftDrops));
 a.leftRewardDrops(a.leftDrops>0.01) = 1;
 a.leftReward = sum(a.leftRewardDrops,2)*dropSize;
-a.rightDrops = a.eventsExpanded.GlobalTimer4_End - a.eventsExpanded.GlobalTimer4_Start;
+a.rightDrops = a.GlobalTimer4_End - a.GlobalTimer4_Start;
 a.rightRewardDrops = NaN(size(a.rightDrops));
 a.rightRewardDrops(a.rightDrops>0.01) = 1;
 a.rightReward = sum(a.rightRewardDrops,2)*dropSize;
@@ -376,18 +376,18 @@ end
 win = 0.050; % bins in ms
 bins = [-1:win:15];
 
-portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
-
-for p = 1:numel(portnames)
-    portname = portnames{p};
-    port = a.(portname);
-    maxLength = max(cellfun(@numel,port));
-    result=cellfun(@(x) [reshape(x,1,[]),NaN(1,maxLength-numel(x))],port,'UniformOutput',false);
-    result2=vertcat(result{:});
-    a.([portname,'Exp']) = result2;
-    result = [];
-    result2 = [];
-end
+% portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
+% 
+% for p = 1:numel(portnames)
+%     portname = portnames{p};
+%     port = a.(portname);
+%     maxLength = max(cellfun(@numel,port));
+%     result=cellfun(@(x) [reshape(x,1,[]),NaN(1,maxLength-numel(x))],port,'UniformOutput',false);
+%     result2=vertcat(result{:});
+%     a.([portname,'Exp']) = result2;
+%     result = [];
+%     result2 = [];
+% end
 
 % mouse may already be in a port at trial start -- condition
 % mouse may be in port when trial ends
@@ -402,8 +402,8 @@ end
 % end
 
 
-portInNames = {'Port1InExp','Port2InExp','Port3InExp'};
-portOutNames = {'Port1OutExp','Port2OutExp','Port3OutExp'};
+portInNames = {'Port1In','Port2In','Port3In'};
+portOutNames = {'Port1Out','Port2Out','Port3Out'};
 portMeanNames = {'meanPort1Dwell','meanPort2Dwell','meanPort3Dwell'};
 portDwellNames = {'port1Dwell','port2Dwell','port3Dwell'};
 portNames = {'Port1','Port2','Port3'};

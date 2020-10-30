@@ -38,8 +38,8 @@ close all;
 
 %% LOAD DATA
 
-loadData = 1;
-% loadData = 0;
+% loadData = 1;
+loadData = 0;
 
 if loadData == 1
     fname = 'infoSeekBpodData.mat';
