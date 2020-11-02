@@ -105,3 +105,7 @@ totalRewards = infoRewards+randRewards;
 sessionSummary{end+1} = infoRewards;
 sessionSummary{end+1} = randRewards;
 sessionSummary{end+1} = totalRewards;
+
+%% PLOTS
+
+OutcomesPlot;
