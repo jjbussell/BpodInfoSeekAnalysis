@@ -38,8 +38,8 @@ close all;
 
 %% LOAD DATA
 
-% loadData = 1;
-loadData = 0;
+loadData = 1;
+% loadData = 0;
 
 if loadData == 1
     fname = 'infoSeekBpodData.mat';
@@ -130,6 +130,10 @@ for ff = 1:numFiles
     if numel(SessionData.TrialSettings)~=SessionData.nTrials
 %         print('trial settings error ');
         filename
+    end
+    
+    if isfield(SessionData.TrialSettings,'GUI')
+       b.trialSettings = [SessionData.TrialSettings(:).GUI]';
     end
         
     b.trialSettings = [SessionData.TrialSettings(:)];
