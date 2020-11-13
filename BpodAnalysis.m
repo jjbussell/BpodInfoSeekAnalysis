@@ -182,8 +182,9 @@ for m = 1:a.mouseCt
         [sortedMouseDays, a.mouseDayIdx{1,m}] = sort(a.mouseDay(ok));
         mouseDayIdx = a.mouseDayIdx{1,m}; % idx into mouse's unsorted trials to sort by day
         mouseTrialsIdx = mouseTrials(mouseDayIdx); % idx into all trials of mouse's sorted trials
+        a.mouseTrialsIdx{m} = mouseTrialsIdx;
         sortedMouseTrialTypes = mouseTrialTypes(mouseDayIdx);
-        firstChoiceIdx = find(sortedMouseTrialTypes == 5,1,'First'); % idx into sorted
+        firstChoiceIdx = find(sortedMouseTrialTypes == 5,1,'First'); % idx into sorted -- for mouseTrialsIdx b/c it's sorted
         firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
         firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
         a.firstChoiceDay(1,m) = sortedMouseDays(firstChoiceIdx);
@@ -192,13 +193,20 @@ for m = 1:a.mouseCt
         mouseInfoSideDiff=diff(sortedMouseInfoside);
         if ~isempty(find(mouseInfoSideDiff) ~= 0)
             reversesIdx = find(mouseInfoSideDiff~=0); % idx in trials sorted by day of first reverse trial
+            a.reversesIdx{m} = reversesIdx;
             reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials
             for r = 1:numel(reverses)
                 a.reverseDay{m,r} = mouseDays(reverses(r)); % last day before reverse
-                trialsBeforeReverse = mouseTrialsIdx(firstChoice:reversesIdx(r));
+            end
+            % need to handle check for same params! diff values?!? what if
+            % only first reverse or decide to do more??
+                a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
+                a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
+                a.reverse(mouseTrialsIdx(reversesIdx(2)+1:reversesIdx(3))) = 2;
+                a.reverse(mouseTrialsIdx(reversesIdx(3)+1:reversesIdx(2))) = -2;
 %                 mouseTrialsIdx(firstChoice:reversesIdx(r)+1)
 %                 mouseTrialsIdx(reversesIdx(r-1):reversesIdx(r)+1)
-            end
+            
         end
     end
 end

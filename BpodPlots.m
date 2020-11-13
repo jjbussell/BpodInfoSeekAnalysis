@@ -95,7 +95,10 @@ for m = 1:a.mouseCt
         ax.YLim = [-0.1 1.1];
         plot(0,0,'Marker','none');
         plot(1:a.mouseDayCt(m),[cell2mat(a.daySummary.percentInfo(m,:))],'Color',[.5 .5 .5],'LineWidth',2,'Marker','o','MarkerSize',3);
-        plot([-10000000 1000000],[0.5 0.5],'k','xliminclude','off','color',[0.8 0.8 0.8],'LineWidth',1);  
+        plot([-10000000 1000000],[0.5 0.5],'k','xliminclude','off','color',[0.8 0.8 0.8],'LineWidth',1);
+        for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+            plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',2);
+        end
         ylabel({'Info choice', 'probability'}); %ylabel({'line1', 'line2','line3'},)
         xlabel('Day');
         hold off;
