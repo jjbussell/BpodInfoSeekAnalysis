@@ -155,9 +155,61 @@ a.info((a.infoSide == 1) & ~isnan(a.leftChoice)) = 0;
 a.info((a.trialType == 2) & ~isnan(a.incorrectChoice)) = 0;
 a.info((a.trialType == 3) & ~isnan(a.incorrectChoice)) = 1;
 
-a.choice_all = a.info; % choice relative to initial info side, all trials
-reverseFlag = a.initinfoside_info == -1;
+% initside = a.initinfoside_info(a.correct==1);
+% a.choice_all = a.info(a.correct==1); % choice relative to initial info side, all trials
+a.choice_all = a.info; 
+reverseFlag = a.initinfoside_info == -1 & a.correct==1;
 a.choice_all(reverseFlag) = ~a.choice_all(reverseFlag);
+
+%% REVERSAL
+
+a.reverseDay = cell(a.mouseCt,3);
+a.reverse = NaN(numel(a.file),1);
+
+for m = 1:a.mouseCt
+    ok = a.mice(:,m)==1; 
+    mouseTrials = find(ok);
+    mouseTrialTypes = a.trialTypes(ok);
+    if sum(mouseTrialTypes == 5) > 0 % if mouse has done choices
+        mouseFileCt(m,1) = sum(a.fileMouse == m);
+        mouseFileTypes = a.fileTrialTypes(a.fileMouse == m);
+        mouseFilesIdx = find(a.fileMouse == m);
+        mouseFileDays = a.fileDay(a.fileMouse == m);    
+        [sortedMouseFileDays,mouseDateIdx] = sort(mouseFileDays); % day for each of that mouse's files
+        sortedMouseFiles=mouseFilesIdx(mouseDateIdx);
+
+        mouseDays = a.mouseDay(ok);
+        [sortedMouseDays, a.mouseDayIdx{1,m}] = sort(a.mouseDay(ok));
+        mouseDayIdx = a.mouseDayIdx{1,m}; % idx into mouse's unsorted trials to sort by day
+        mouseTrialsIdx = mouseTrials(mouseDayIdx); % idx into all trials of mouse's sorted trials
+        sortedMouseTrialTypes = mouseTrialTypes(mouseDayIdx);
+        firstChoiceIdx = find(sortedMouseTrialTypes == 5,1,'First'); % idx into sorted
+        firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
+        firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
+        a.firstChoiceDay(1,m) = sortedMouseDays(firstChoiceIdx);
+        mouseInfoside = a.infoSide(ok);
+        sortedMouseInfoside = mouseInfoside(mouseDayIdx);
+        mouseInfoSideDiff=diff(sortedMouseInfoside);
+        if ~isempty(find(mouseInfoSideDiff) ~= 0)
+            reversesIdx = find(mouseInfoSideDiff~=0); % idx in trials sorted by day of first reverse trial
+            reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials
+            for r = 1:numel(reverses)
+                a.reverseDay{m,r} = mouseDays(reverses(r)); % last day before reverse
+                trialsBeforeReverse = mouseTrialsIdx(firstChoice:reversesIdx(r));
+%                 mouseTrialsIdx(firstChoice:reversesIdx(r)+1)
+%                 mouseTrialsIdx(reversesIdx(r-1):reversesIdx(r)+1)
+            end
+        end
+    end
+end
+
+% give trials a by-mouse sort and sorted day per mouse
+% then use diff on infoside to find reversals (trialtypes = 5 and params
+% the same)
+% assign that day to reverse days
+% assign each trial to "choices yes/no" and then pre-reverse, during
+% reverse, second pre, second reverse
+
 
 %% REACTION TIME AND TRIAL LENGTH
 
@@ -304,8 +356,8 @@ for m = 1:a.mouseCt
         a.daySummary.trialCt{m,d} = sum(okAll);
         a.daySummary.totalCorrectTrials{m,d} = sum(a.correct(okAll));
         a.daySummary.totalWater{m,d} = sum(a.reward(okAll));
-        a.daySummary.percentInfo{m,d} = nanmean(a.infoCorrTrials(ok & a.trialType == 1 & a.correct == 1 & a.trialTypes == 5));
-        a.daySummary.percentIIS{m,d} = nanmean(a.choice_all(ok & a.trialType == 1 & a.correct == 1 & a.trialTypes == 5));
+        a.daySummary.percentInfo{m,d} = nanmean(a.infoCorrTrials(ok & a.trialType == 1 & a.trialTypes == 5));
+        a.daySummary.percentIIS{m,d} = nanmean(a.choice_all(ok & a.trialType == 1 & a.trialTypes == 5));
                 
         a.daySummary.rxnInfoForced{m,d} = nanmean(a.rxn(a.infoForcedCorr & ok));
         a.daySummary.rxnInfoChoice{m,d} = nanmean(a.rxn(a.infoChoiceCorr & ok));

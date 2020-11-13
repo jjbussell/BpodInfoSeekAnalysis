@@ -130,11 +130,11 @@ for m = 1:a.mouseCt
     for i = 1:numel(outcomeCounts)
         bar(i,outcomeCounts(i),'FaceColor',CCfinal(i,:),'EdgeColor','none');
     end
-    xlabel('Outcome');
+    xlabel('Outcomes on most recent day');
 %     lgd = legend(ax,a.outcomeLabels,'Location','southoutside','Orientation','horizontal');
 %     lgd.Box = 'off';
 %     lgd.FontWeight = 'bold'; 
-    hold off;3
+    hold off;
     
     ax = nsubplot(3,2,3,1);
     ax.FontSize = 8;
@@ -149,7 +149,7 @@ for m = 1:a.mouseCt
 %     end
     ylabel({'Reaction', 'Time (s)'});
     xlabel('Day');    
-    leg = (ax,['Info' newline '-Forced'],['Info' newline '-Choice'],['No Info' newline '-Forced'],['No Info' newline '-Choice'],'Location','southoutside','Orientation','horizontal');
+    leg = legend(ax,['Info' newline '-Forced'],['Info' newline '-Choice'],['No Info' newline '-Forced'],['No Info' newline '-Choice'],'Location','southoutside','Orientation','horizontal');
     leg.Box = 'off';
     leg.FontWeight = 'bold';
     hold off;
