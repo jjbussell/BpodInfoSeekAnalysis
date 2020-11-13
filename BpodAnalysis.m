@@ -196,7 +196,7 @@ for m = 1:a.mouseCt
             a.reversesIdx{m} = reversesIdx;
             reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials
             for r = 1:numel(reverses)
-                a.reverseDay{m,r} = mouseDays(reverses(r)); % last day before reverse
+                a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
             end
             % need to handle check for same params! diff values?!? what if
             % only first reverse or decide to do more??
