@@ -161,22 +161,38 @@ a.choice_all = a.info;
 reverseFlag = a.initinfoside_info == -1 & a.correct==1;
 a.choice_all(reverseFlag) = ~a.choice_all(reverseFlag);
 
+a.choiceTrials = a.trialTypes==5 & a.trialType == 1;
+
+%% REWARD PARAMS
+
+a.infoBigDrops = [a.trialSettings.InfoBigDrops]';
+a.infoSmallDrops = [a.trialSettings.InfoSmallDrops]';
+a.randBigDrops = [a.trialSettings.RandBigDrops]';
+a.randSmallDrops = [a.trialSettings.RandSmallDrops]';
+a.infoProb = [a.trialSettings.InfoRewardProb]';
+a.randProb = [a.trialSettings.RandRewardProb]';
+a.rewardParams = [a.infoBigDrops a.infoSmallDrops a.randBigDrops...
+    a.randSmallDrops a.infoProb a.randProb];
+
 %% REVERSAL
 
 a.reverseDay = cell(a.mouseCt,3);
 a.reverse = NaN(numel(a.file),1);
+a.choiceMice = zeros(a.mouseCt,1);
 
 for m = 1:a.mouseCt
-    ok = a.mice(:,m)==1; 
+    ok = a.mice(:,m)==1 ; 
     mouseTrials = find(ok);
     mouseTrialTypes = a.trialTypes(ok);
+    mouseParams = a.rewardParams(ok,:);
     if sum(mouseTrialTypes == 5) > 0 % if mouse has done choices
-        mouseFileCt(m,1) = sum(a.fileMouse == m);
-        mouseFileTypes = a.fileTrialTypes(a.fileMouse == m);
-        mouseFilesIdx = find(a.fileMouse == m);
-        mouseFileDays = a.fileDay(a.fileMouse == m);    
-        [sortedMouseFileDays,mouseDateIdx] = sort(mouseFileDays); % day for each of that mouse's files
-        sortedMouseFiles=mouseFilesIdx(mouseDateIdx);
+        a.choiceMice(m,1) = 1;
+%         mouseFileCt(m,1) = sum(a.fileMouse == m);
+%         mouseFileTypes = a.fileTrialTypes(a.fileMouse == m);
+%         mouseFilesIdx = find(a.fileMouse == m);
+%         mouseFileDays = a.fileDay(a.fileMouse == m);    
+%         [sortedMouseFileDays,mouseDateIdx] = sort(mouseFileDays); % day for each of that mouse's files
+%         sortedMouseFiles=mouseFilesIdx(mouseDateIdx);
 
         mouseDays = a.mouseDay(ok);
         [sortedMouseDays, a.mouseDayIdx{1,m}] = sort(a.mouseDay(ok));
@@ -188,8 +204,10 @@ for m = 1:a.mouseCt
         firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
         firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
         a.firstChoiceDay(1,m) = sortedMouseDays(firstChoiceIdx);
+       
         mouseInfoside = a.infoSide(ok);
         sortedMouseInfoside = mouseInfoside(mouseDayIdx);
+%         sortedMouseInfosideChoice = sortedMouseInfoside(firstChoiceIdx:end);
         mouseInfoSideDiff=diff(sortedMouseInfoside);
         if ~isempty(find(mouseInfoSideDiff) ~= 0)
             reversesIdx = find(mouseInfoSideDiff~=0); % idx in trials sorted by day of first reverse trial
@@ -200,6 +218,8 @@ for m = 1:a.mouseCt
             end
             % need to handle check for same params! diff values?!? what if
             % only first reverse or decide to do more??
+            
+            % same params to check: reward probs, drops
                 a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
                 a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
                 a.reverse(mouseTrialsIdx(reversesIdx(2)+1:reversesIdx(3))) = 2;
@@ -210,6 +230,12 @@ for m = 1:a.mouseCt
         end
     end
 end
+
+
+%% MOUSE CATEGORIES
+
+a.choiceMiceList = a.mouseList(a.choiceMice==1);
+a.choiceMouseCt = sum(a.choiceMice);
 
 %% REACTION TIME AND TRIAL LENGTH
 
