@@ -184,6 +184,7 @@ for m = 1:a.mouseCt
     ok = a.mice(:,m)==1 ; 
     mouseTrials = find(ok);
     mouseTrialTypes = a.trialTypes(ok);
+    mouseFile = a.file(ok);
     mouseParams = a.rewardParams(ok,:);
     if sum(mouseTrialTypes == 5) > 0 % if mouse has done choices
         a.choiceMice(m,1) = 1;
@@ -200,6 +201,7 @@ for m = 1:a.mouseCt
         mouseTrialsIdx = mouseTrials(mouseDayIdx); % idx into all trials of mouse's sorted trials
         a.mouseTrialsIdx{m} = mouseTrialsIdx;
         sortedMouseTrialTypes = mouseTrialTypes(mouseDayIdx);
+        sortedMouseFile = mouseFile(mouseDayIdx);
         firstChoiceIdx = find(sortedMouseTrialTypes == 5,1,'First'); % idx into sorted -- for mouseTrialsIdx b/c it's sorted
         firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
         firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
@@ -210,23 +212,31 @@ for m = 1:a.mouseCt
 %         sortedMouseInfosideChoice = sortedMouseInfoside(firstChoiceIdx:end);
         mouseInfoSideDiff=diff(sortedMouseInfoside);
         if ~isempty(find(mouseInfoSideDiff) ~= 0)
-            reversesIdx = find(mouseInfoSideDiff~=0); % idx in trials sorted by day of first reverse trial
+            sortedMouseParams = mouseParams(mouseDayIdx,:);
+            paramChange = find(diff(sortedMouseParams,1,1)~=0,1,'first');
+            if ~isempty(paramChange)
+                lastRevTrial = paramChange; % into sorted trials
+            else
+                lastRevTrial = numel(mouseTrials);
+            end
+            reversesIdx = find(mouseInfoSideDiff~=0); % idx of first reverse trial in trials sorted by day 
             a.reversesIdx{m} = reversesIdx;
             reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials
+            
             for r = 1:numel(reverses)
-                a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
-            end
-            % need to handle check for same params! diff values?!? what if
-            % only first reverse or decide to do more??
-            
-            % same params to check: reward probs, drops
-                a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
-                a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
-                a.reverse(mouseTrialsIdx(reversesIdx(2)+1:reversesIdx(3))) = 2;
-                a.reverse(mouseTrialsIdx(reversesIdx(3)+1:reversesIdx(2))) = -2;
-%                 mouseTrialsIdx(firstChoice:reversesIdx(r)+1)
-%                 mouseTrialsIdx(reversesIdx(r-1):reversesIdx(r)+1)
-            
+%                 a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
+                a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse
+                if r==1
+                    a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
+                    a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
+                elseif r>1 & r<numel(reverses)
+                    a.reverse(mouseTrialsIdx(reversesIdx(r)+1:reversesIdx(r+1))) = r;
+                    a.reverse(mouseTrialsIdx(reversesIdx(r+1)+1:reversesIdx(r+2))) = -r;
+                elseif r==numel(reverses)
+                    a.reverse(mouseTrialsIdx(reversesIdx(r)+1:reversesIdx(r+1))) = r;
+                    a.reverse(mouseTrialsIdx(reversesIdx(r+1)+1:lastRevTrial))) = -r;
+                end
+            end            
         end
     end
 end
