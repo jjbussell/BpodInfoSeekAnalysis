@@ -18,7 +18,8 @@ breaks = strfind(filename,'_');
 sessionSummary{2} = filename(breaks(2)+1:breaks(3)-1);
 
 %% SETTINGS
-settings=SessionData.SettingsFile.GUI;
+% settings=SessionData.SettingsFile.GUI;
+settings = SessionData.TrialSettings(end);
 settingsnames = fields(settings);
 settingsct = numel(fields(settings));
 
