@@ -212,6 +212,7 @@ for m = 1:a.mouseCt
 %         sortedMouseInfosideChoice = sortedMouseInfoside(firstChoiceIdx:end);
         mouseInfoSideDiff=diff(sortedMouseInfoside);
         if ~isempty(find(mouseInfoSideDiff) ~= 0)
+            a.reverseMice(m,1) = 1;
             sortedMouseParams = mouseParams(mouseDayIdx,:);
             paramChange = find(diff(sortedMouseParams,1,1)~=0,1,'first');
             if ~isempty(paramChange)
@@ -577,15 +578,19 @@ save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% CURRENT MICE
+
+dayDates = datetime(unique(a.day),'InputFormat','yyyyMMdd');
+toDay = string(datetime(max(dayDates),'Format','yyyyMMdd'));
+thisDay = a.day == toDay;
+a.currentMiceList = unique(a.mouse(thisDay));
+a.currentMice = find(strcmp(a.mouseList,a.currentMiceList));
+
 %% TO ADD
 
 %{
-current mice
-choice mice
-reverse mice
-(later opto, imaging, values, licking!!)
-
-
+later opto, imaging, values, licking!!
 %}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
