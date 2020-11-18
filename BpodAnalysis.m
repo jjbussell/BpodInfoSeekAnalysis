@@ -240,7 +240,7 @@ for m = 1:a.mouseCt
                 end
             end
             
-%             % REACTION AND LICKS REL TO CURR INFO SIDE
+%             % REACTION AND LICKS REL TO CURR INFO SIDE4r
 %             okMouseTrials = zeros(numel(a.file),1);
 %             okMouseTrials(mouseTrialsIdx);
 %             ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
@@ -807,34 +807,34 @@ end
 %     a.randBigProbs{m,1} = randBigProb;
 % end
 % 
-% %% DAYS AROUND REVERSES
-% 
-% if ~isempty(a.reverseMice)
-% 
-%     a.reversalDays = NaN(numel(a.reverseMice),4);
-% 
-%     for m = 1:numel(a.reverseMice)
-%         mm=a.reverseMice(m);
-%         a.reversalDays(m,1) = a.reverseDay{mm,1}-1; % day prior to 1st reversal
-%         if size(a.reverseDay(mm,:),2) > 1
-%             if ~isempty(a.reverseDay{mm,2})
-%             a.reversalDays(m,2) = a.reverseDay{mm,2}-1; % day prior to second reversal
-% 
-%             % last day of second reversal (either r+3/last day or last day before get
-%             % ready for values)
+%% DAYS AROUND REVERSES
+
+if ~isempty(a.reverseMice)
+
+    a.reversalDays = NaN(numel(a.reverseMice),4);
+
+    for m = 1:numel(a.reverseMice)
+        mm=a.reverseMice(m);
+        a.reversalDays(m,1) = a.reverseDay{mm,1}-1; % day prior to 1st reversal
+        if size(a.reverseDay(mm,:),2) > 1
+            if ~isempty(a.reverseDay{mm,2})
+            a.reversalDays(m,2) = a.reverseDay{mm,2}-1; % day prior to second reversal
+
+            % last day of second reversal (either r+3/last day or last day before get
+            % ready for values)
 %             if ~ismember(mm,a.valueMice)
-%                 if ~isempty(a.reverseDay{mm,3})
-%                     a.reversalDays(m,3) = a.reverseDay{mm,3}-1; % day prior to third reversal
-%                     a.reversalDays(m,4) = a.mouseDayCt(mm);
-%                 
-%                 else
-%                 
-%                     if a.reverseDay{mm,2}+3 >= a.mouseDayCt(mm)
-%                         a.reversalDays(m,3) = a.mouseDayCt(mm);
-%                     else
-%                         a.reversalDays(m,3) = a.reverseDay{mm,2}+3;
-%                     end
-%                 end
+                if ~isempty(a.reverseDay{mm,3})
+                    a.reversalDays(m,3) = a.reverseDay{mm,3}-1; % day prior to third reversal
+                    a.reversalDays(m,4) = a.mouseDayCt(mm);
+                
+                else
+                
+                    if a.reverseDay{mm,2}+3 >= a.mouseDayCt(mm)
+                        a.reversalDays(m,3) = a.mouseDayCt(mm);
+                    else
+                        a.reversalDays(m,3) = a.reverseDay{mm,2}+3;
+                    end
+                end
 %             else
 %                 mmm = find(a.valueMice == mm);
 %                 mouseValueDays = a.mouseValueDays{mmm,1};
@@ -850,13 +850,14 @@ end
 %                     a.reversalDays(m,3) = mouseValueDays(1);
 %                 end
 %               end
-%             end
-%         end
-%     end
-% 
+            end
+        end
+    end
+end % TAKE THIS OUT WHEN ADD BELOW
+
 % %% CHOICE, RXN SPEED, EARLY LICKS, AND REWARD RATE AROUND REVERSALS BY IIS
 % 
-%     a.reversalPrefs = NaN(numel(a.reverseMice),3);
+5%     a.reversalPrefs = NaN(numel(a.reverseMice),3);
 %     a.reversalRxn = NaN(numel(a.reverseMice),3);
 %     a.reversalLicks = NaN(numel(a.reverseMice),3);
 %     a.reversalMultiPrefs = NaN(numel(a.reverseMice),8);
