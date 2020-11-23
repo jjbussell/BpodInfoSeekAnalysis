@@ -225,9 +225,13 @@ for m = 1:a.mouseCt
             a.reversesIdx{m} = reversesIdx;
             reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials
             
+            for r = 1:numel(reverses)
+               a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse 
+            end
+            
             for r = 1:numel(reverses)-1
 %                 a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
-                a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse
+%                 a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse
                 if r==1
                     a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
                     a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
@@ -753,18 +757,19 @@ a.goodRxn = a.rxn<8000 & a.rxn>100;
 %%
 % RELATIVE TO CURRENT INFO SIDE
 
-% DOESN'T SORT!!! not actually getting last 300!!!
+% DOESN'T SORT!!! not actually getting last 300!!! except unlikely to be
+% >300 of that reverse choice??
 
 for m=1:a.mouseCt  
-            ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
-            ok1Idx = find(ok1);
-            okInfoPreRev = find(ok1==1,300,'last');
-            ok2 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == 1;
-            okRandPreRev = find(ok2==1,300,'last');
-            ok3 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == -1;
-            okInfoPostRev = find(ok3==1,300,'last');
-            ok4 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == -1;
-            okRandPostRev = find(ok4==1,300,'last');
+    ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
+    ok1Idx = find(ok1);
+    okInfoPreRev = find(ok1==1,300,'last');
+    ok2 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == 1;
+    okRandPreRev = find(ok2==1,300,'last');
+    ok3 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == -1;
+    okInfoPostRev = find(ok3==1,300,'last');
+    ok4 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == -1;
+    okRandPostRev = find(ok4==1,300,'last');
    % pre-reverse, INFO
 %    a.preRevEarlyLicks(m,1) = mean(a.earlyLicks(okInfoPreRev));
    a.preRevRxnSpeed(m,1) = mean(a.rxnSpeed(okInfoPreRev));
@@ -825,7 +830,7 @@ if ~isempty(a.reverseMice)
 %             if ~ismember(mm,a.valueMice)
                 if ~isempty(a.reverseDay{mm,3})
                     a.reversalDays(m,3) = a.reverseDay{mm,3}-1; % day prior to third reversal
-                    a.reversalDays(m,4) = a.mouseDayCt(mm);
+                    a.reversalDays(m,4) = a.mouseDayCt(mm); % no? WHAT ABOUT VALUE?!?
                 
                 else
                 
