@@ -38,8 +38,8 @@ close all;
 
 %% LOAD DATA
 
-loadData = 1;
-% loadData = 0;
+% loadData = 1;
+loadData = 0;
 
 if loadData == 1
     fname = 'infoSeekBpodData.mat';
@@ -183,6 +183,7 @@ for ff = 1:numFiles
             'TimeoutOdor',...
             'TimeoutRewardDelay',...
             'TimeoutOutcome',...
+            'LeavingTimeout',...
             'EndTrial'};
         b.stateList = stateList;
     
@@ -260,8 +261,9 @@ for ff = 1:numFiles
     
 end % end for each file
 
-% THIS IS STILL BROKEN
-if isfield(a,'files') == 0
+if exist('a','var') == 0
+    a.files = session;
+elseif exist('a','var') == 1 & isfield(a,'files') == 0
    a.files = session;
 else       
     a.files = [a.files; session];

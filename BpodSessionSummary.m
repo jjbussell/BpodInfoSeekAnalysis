@@ -109,4 +109,4 @@ sessionSummary{end+1} = totalRewards;
 
 %% PLOTS
 
-OutcomesPlot;
+PlotOutcomes;
