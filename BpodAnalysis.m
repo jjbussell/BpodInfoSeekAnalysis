@@ -628,7 +628,7 @@ later opto, imaging, values, licking!!
 
 trialsToCount = 300;
 
-if ~isempty(a.choiceMice)
+if sum(a.choiceMice)>0
     
     a.meanChoice = NaN(a.mouseCt,3);
     a.choiceCI = NaN(a.mouseCt,2);
