@@ -703,7 +703,7 @@ end
 
 %% OVERALL CHOICES BY SIDE
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
     for m = 1:a.mouseCt
        ok = a.mice(:,m) == 1 & a.trialType == 1 & a.trialTypes == 5 & a.reverse~= 0 & a.correct == 1; % need to match params
        a.overallChoice(m,1) = mean(a.info(ok & a.infoSide == 0)); % info side = 0
@@ -718,7 +718,7 @@ end
 
 
 %% SORT BY INFO PREFERENCE
-if ~isempty(a.choiceMice)
+if sum(a.choiceMice)>0
     [a.sortedChoice,a.sortIdx] = sortrows(a.meanChoice(~isnan(a.meanChoice(:,1)),:),1);
     a.sortedMouseList = a.choiceMiceList(a.sortIdx);
     a.sortedCI = a.choiceCI(a.sortIdx,:);
@@ -759,7 +759,7 @@ a.goodRxn = a.rxn<8000 & a.rxn>100;
 
 % DOESN'T SORT!!! not actually getting last 300!!! except unlikely to be
 % >300 of that reverse choice??
-
+if sum(a.reverseMice)>0
 for m=1:a.mouseCt  
     ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
     ok1Idx = find(ok1);
@@ -799,6 +799,8 @@ for m=1:a.mouseCt
 %    a.earlyLickIdx(m,2) = (a.postRevEarlyLicks(m,1)-a.postRevEarlyLicks(m,2))/(a.postRevEarlyLicks(m,1)+a.postRevEarlyLicks(m,2));
    a.rxnSpeedIdx(m,2) = (a.postRevRxnSpeed(m,1)-a.postRevRxnSpeed(m,2))/(a.postRevRxnSpeed(m,1)+a.postRevRxnSpeed(m,2)); 
 end
+
+end
 % 
 % %%
 % for m = 1:a.mouseCt
@@ -814,7 +816,7 @@ end
 % 
 %% DAYS AROUND REVERSES
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
 
     a.reversalDays = NaN(numel(a.reverseMice),4);
 

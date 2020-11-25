@@ -147,9 +147,9 @@ for m = 1:a.mouseCt
     plot(cell2mat(a.daySummary.rxnInfoChoice(m,:)),'Color',purple,'LineWidth',1,'LineStyle',':');
     plot(cell2mat(a.daySummary.rxnRandForced(m,:)),'Color',orange,'LineWidth',1);
     plot(cell2mat(a.daySummary.rxnRandChoice(m,:)),'Color',orange,'LineWidth',1,'LineStyle',':');
-%     for r = 1:numel(cell2mat(a.reverseDay(m,:)))
-%         plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
-%     end
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
     ylabel({'Reaction', 'Time (s)'});
     xlabel('Day');    
     leg = legend(ax,['Info' newline '-Forced'],['Info' newline '-Choice'],['No Info' newline '-Forced'],['No Info' newline '-Choice'],'Location','southoutside','Orientation','horizontal');
@@ -157,7 +157,7 @@ for m = 1:a.mouseCt
     leg.FontWeight = 'bold';
     hold off;
 
-%     ax = nsubplot(4,2,2,2);
+%     ax = nsubplot(3,2,1,2);
 %     ax.FontSize = 8;
 %     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
 %     ax.YLim = [0 inf];
@@ -181,23 +181,8 @@ for m = 1:a.mouseCt
 %     leg.FontWeight = 'bold';
 %     hold off;
 %     
-%     ax = nsubplot(4,2,3,2);
-%     ax.FontSize = 8;
-%     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
-% %     ax.YLim = [6000 20000];
-%     plot(cell2mat(a.daySummary.trialLengthEntryInfoForced(m,:)),'Color',purple,'LineWidth',2,'Marker','o','MarkerFaceColor',purple,'MarkerSize',3);
-%     plot(cell2mat(a.daySummary.trialLengthEntryInfoChoice(m,:)),'Color',purple,'LineWidth',2,'Marker','o','MarkerFaceColor',purple,'MarkerSize',3,'LineStyle',':');
-%     plot(cell2mat(a.daySummary.trialLengthEntryRandForced(m,:)),'Color',orange,'LineWidth',2,'Marker','o','MarkerFaceColor',orange,'MarkerSize',3);
-%     plot(cell2mat(a.daySummary.trialLengthEntryRandChoice(m,:)),'Color',orange,'LineWidth',2,'Marker','o','MarkerFaceColor',orange,'MarkerSize',3,'LineStyle',':');
-%     plot([a.reverseDay(m)-0.5 a.reverseDay(m)-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',4);
-%     ylabel({'Trial', 'duration (ms)'});
-% %     xlabel('Day');
-%     leg = legend(ax,'Info Forced','Info Choice','No Info Forced','No Info Choice','Location','southoutside','Orientation','horizontal');
-%     leg.Box = 'off';
-%     leg.FontWeight = 'bold';
-%     hold off;
 
-    ax = nsubplot(3,2,1,2);
+    ax = nsubplot(3,2,2,2);
     ax.FontSize = 8;
     title(a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')});    
     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
@@ -215,15 +200,15 @@ for m = 1:a.mouseCt
     leg.FontWeight = 'bold';
     hold off;
 
-    ax = nsubplot(3,2,2,2);
-    ax.FontSize = 8;
-    ax.XTick = [0:5:a.mouseDayCt(m)];
-    incomplete = cell2mat(a.dayIncomplete(:,:,m));
-    for i=1:8
-        plot(incomplete(i,:),'Color',CCNP(i,:))
-    end
-    xlabel('Day')
-    ylabel('Not Present')
+%     ax = nsubplot(3,2,2,2);
+%     ax.FontSize = 8;
+%     ax.XTick = [0:5:a.mouseDayCt(m)];
+%     incomplete = cell2mat(a.dayIncomplete(:,:,m));
+%     for i=1:8
+%         plot(incomplete(i,:),'Color',CCNP(i,:))
+%     end
+%     xlabel('Day')
+%     ylabel('Not Present')
 
     ax = nsubplot(3,2,3,2);
     ax.FontSize = 8;
@@ -236,15 +221,9 @@ for m = 1:a.mouseCt
 %     plot(cell2mat(a.daySummary.rewardRateInfoChoice(m,:)),'Color',purple,'LineWidth',2,'Marker','o','MarkerEdgeColor',purple,'MarkerFaceColor','w','MarkerSize',3,'LineStyle',':');
 %     plot(cell2mat(a.daySummary.rewardRateRandForced(m,:)),'Color',orange,'LineWidth',2,'Marker','o','MarkerFaceColor',orange,'MarkerSize',3);
 %     plot(cell2mat(a.daySummary.rewardRateRandChoice(m,:)),'Color',orange,'LineWidth',2,'Marker','o','MarkerEdgeColor',orange,'MarkerFaceColor','w','MarkerSize',3,'LineStyle',':');
-%     for r = 1:numel(cell2mat(a.reverseDay(m,:)))
-%         plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
-%     end
-%     plot(cell2mat(a.daySummary.infoBigLicksWater(m,:)),'Color','g','LineWidth',2,'Marker','o','MarkerFaceColor','g','MarkerSize',3,'Visible','off');
-%     plot(cell2mat(a.daySummary.infoSmallLicksWater(m,:)),'Color','m','LineWidth',2,'Marker','o','MarkerFaceColor','m','MarkerSize',3,'Visible','off');
-%     plot(cell2mat(a.daySummary.randBigLicksWater(m,:)),'Color','b','LineWidth',2,'Marker','o','MarkerFaceColor','b','MarkerSize',3,'Visible','off');
-%     plot(cell2mat(a.daySummary.randSmallLicksWater(m,:)),'Color','c','LineWidth',2,'Marker','o','MarkerFaceColor','c','MarkerSize',3,'Visible','off');
-%     plot(cell2mat(a.daySummary.CRewards(m,:)),'Color',cornflower,'LineWidth',2,'Marker','o','MarkerFaceColor',cornflower,'MarkerSize',3,'Visible','off');
-%     plot(cell2mat(a.daySummary.DRewards(m,:)),'Color',cornflower,'LineWidth',2,'Marker','o','MarkerEdgeColor',cornflower,'MarkerSize',3,'LineStyle',':','Visible','off');
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
     ylabel({'Reward', 'Rate (uL/min)'});
     xlabel('Day');    
     leg = legend(ax,'Info','No Info','Choice','Location','southoutside','Orientation','horizontal');
