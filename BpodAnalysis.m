@@ -174,6 +174,13 @@ a.randProb = [a.trialSettings.RandRewardProb]';
 a.rewardParams = [a.infoBigDrops a.infoSmallDrops a.randBigDrops...
     a.randSmallDrops a.infoProb a.randProb];
 
+%% SIDE ODOR
+
+a.odorAtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
+a.odorBtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
+a.odorCtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
+a.odorDtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
+
 %% REVERSAL
 
 a.reverseDay = cell(a.mouseCt,3);
@@ -434,6 +441,13 @@ for m = 1:a.mouseCt
         a.daySummary.trialLengthInfoChoice{m,d} = nansum(a.trialLength(a.infoChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.infoChoiceCorr == 1 & ok == 1)));
         a.daySummary.trialLengthRandForced{m,d} = nansum(a.trialLength(a.randForcedCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randForcedCorr == 1 & ok == 1)));
         a.daySummary.trialLengthRandChoice{m,d} = nansum(a.trialLength(a.randChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randChoiceCorr == 1 & ok == 1)));        
+        
+        a.daySummary.ARewards{m,d} = a.reward(a.odorAtrials==1 & ok==1)/sum(a.odorAtrials & ok);
+        a.daySummary.BRewards{m,d} = a.reward(a.odorBtrials==1 & ok==1)/sum(a.odorBtrials & ok);
+        a.daySummary.CRewards{m,d} = a.reward(a.odorCtrials==1 & ok==1)/sum(a.odorCtrials & ok);
+        a.daySummary.DRewards{m,d} = a.reward(a.odorDtrials==1 & ok==1)/sum(a.odorDtrials & ok);
+        a.daySummary.randBigRewards{m,d} = a.reward(a.randBig==1 & ok==1)/sum(a.randBig & ok);
+        a.daySummary.randSmallRewards{m,d} = a.reward(a.randSmall==1 & ok==1)/sum(randSmall & ok);
         
         a.daySummary.rewardRateInfoForced{m,d} = nansum(a.reward(a.infoForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.infoForced == 1 & okAll == 1))/60);
         a.daySummary.rewardRateRandForced{m,d} = nansum(a.reward(a.randForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.randForced == 1 & okAll == 1))/60);

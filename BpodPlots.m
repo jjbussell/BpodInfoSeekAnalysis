@@ -157,30 +157,26 @@ for m = 1:a.mouseCt
     leg.FontWeight = 'bold';
     hold off;
 
-%     ax = nsubplot(3,2,1,2);
-%     ax.FontSize = 8;
-%     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
-%     ax.YLim = [0 inf];
-%     plot(cell2mat(a.daySummary.ARewards(m,:)),'Color','g','LineWidth',1);
-%     plot(cell2mat(a.daySummary.BRewards(m,:)),'Color','m','LineWidth',1);
-%     plot(cell2mat(a.daySummary.CRewards(m,:)),'Color',cornflower,'LineWidth',1);
-%     plot(cell2mat(a.daySummary.DRewards(m,:)),'Color',cornflower,'LineWidth',1,'LineStyle',':');
-%     plot(cell2mat(a.daySummary.randBigRewards(m,:)),'Color','c','LineWidth',1);
-%     plot(cell2mat(a.daySummary.randSmallRewards(m,:)),'Color','b','LineWidth',1);
-%     for r = 1:numel(cell2mat(a.reverseDay(m,:)))
-%         plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
-%     end     
-%     ylabel({'Mean Reward', '(uL)'});
-% %     xlabel('Day');
-%     if ismember(m,find(a.noneMice))
-%     leg = legend(ax,['Info' newline '-Rew'],['Info' newline '-No Rew'],['No Info' newline '-C'],['No Info' newline '-D'],['No Info' newline '-Rew'],['No Info' newline '-No Rew'],'Location','southoutside','Orientation','horizontal');
-%     else
-%     leg = legend(ax,['Info' newline '-Big'],['Info' newline '-Small'],['No Info' newline '-C'],['No Info' newline '-D'],['No Info' newline '-Big'],['No Info' newline '-Small'],'Location','southoutside','Orientation','horizontal');        
-%     end
-%     leg.Box = 'off';
-%     leg.FontWeight = 'bold';
-%     hold off;
-%     
+    ax = nsubplot(3,2,1,2);
+    ax.FontSize = 8;
+    ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
+    ax.YLim = [0 inf];
+    plot(cell2mat(a.daySummary.ARewards(m,:)),'Color','g','LineWidth',1);
+    plot(cell2mat(a.daySummary.BRewards(m,:)),'Color','m','LineWidth',1);
+    plot(cell2mat(a.daySummary.CRewards(m,:)),'Color',cornflower,'LineWidth',1);
+    plot(cell2mat(a.daySummary.DRewards(m,:)),'Color',cornflower,'LineWidth',1,'LineStyle',':');
+    plot(cell2mat(a.daySummary.randBigRewards(m,:)),'Color','c','LineWidth',1);
+    plot(cell2mat(a.daySummary.randSmallRewards(m,:)),'Color','b','LineWidth',1);
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end     
+    ylabel({'Mean Reward', '(uL)'});
+%     xlabel('Day');
+    leg = legend(ax,['Info' newline '-Rew'],['Info' newline '-No Rew'],['No Info' newline '-C'],['No Info' newline '-D'],['No Info' newline '-Rew'],['No Info' newline '-No Rew'],'Location','southoutside','Orientation','horizontal');
+    leg.Box = 'off';
+    leg.FontWeight = 'bold';
+    hold off;
+    
 
     ax = nsubplot(3,2,2,2);
     ax.FontSize = 8;
