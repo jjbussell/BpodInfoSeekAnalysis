@@ -227,6 +227,16 @@ for ff = 1:numFiles
        a.file = [a.file; b.file];
        a.mouse = [a.mouse; b.mouse];
        a.day = [a.day; b.day];
+       
+       if sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0
+           afields=fields(a.trialSettings);
+           fieldnames = afields(ismember(fields(a.trialSettings),fields(b.trialSettings))==0);
+           for i = 1:numel(fieldnames)
+               for n = 1:size(b.trialSettings,1)
+                b.trialSettings(n).(fieldnames{i})=[];
+               end
+           end
+       end
        a.trialSettings = [a.trialSettings; b.trialSettings];
        
        a.trialType = [a.trialType; b.trialType];
