@@ -751,19 +751,28 @@ a.goodRxn = a.rxn<8000 & a.rxn>100;
 %%
 % RELATIVE TO CURRENT INFO SIDE
 
-% DOESN'T SORT!!! not actually getting last 300!!! except unlikely to be
-% >300 of that reverse choice??
 if sum(a.reverseMice)>0
 for m=1:a.mouseCt  
     ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
     ok1Idx = find(ok1);
-    okInfoPreRev = find(ok1==1,300,'last');
+    [~,sort1idx] = sort(a.mouseDay(ok1==1));
+    ok1sorted = ok1Idx(sort1idx);    
+    okInfoPreRev = find(ok1sorted,300,'last');
     ok2 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == 1;
-    okRandPreRev = find(ok2==1,300,'last');
+    ok2Idx = find(ok2);
+    [~,sort2idx] = sort(a.mouseDay(ok2==1));
+    ok2sorted = ok1Idx(sort2idx);     
+    okRandPreRev = find(ok2sorted,300,'last');
     ok3 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == -1;
-    okInfoPostRev = find(ok3==1,300,'last');
+    ok3Idx = find(ok3);
+    [~,sort3idx] = sort(a.mouseDay(ok3==1));
+    ok3sorted = ok3Idx(sort3idx);     
+    okInfoPostRev = find(ok3sorted,300,'last');
     ok4 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == -1;
-    okRandPostRev = find(ok4==1,300,'last');
+    ok4Idx = find(ok4);
+    [~,sort4idx] = sort(a.mouseDay(ok4==1));
+    ok4sorted = ok4Idx(sort4idx); 
+    okRandPostRev = find(ok4sorted,300,'last');
    % pre-reverse, INFO
 %    a.preRevEarlyLicks(m,1) = mean(a.earlyLicks(okInfoPreRev));
    a.preRevRxnSpeed(m,1) = mean(a.rxnSpeed(okInfoPreRev));
