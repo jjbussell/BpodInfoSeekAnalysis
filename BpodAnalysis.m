@@ -339,6 +339,7 @@ a.completeInitiation = a.centerEntryCount == 1;
 
 % doesn't include NP (NP info small is not an error)-->NOW IT DOES!
 % how to check if timeout or not?!?
+
 a.infoCorrCodes = [11 13];
 a.infoIncorrCodes = [10 12 14 15];
 a.randCorrCodes = [17 19];
@@ -359,14 +360,29 @@ a.choiceCorrTypeNames = {'InfoForced','RandForced','InfoChoice',...
     'RandChoice'};
 a.choiceTypeCtsCorr = [sum(a.infoForcedCorr) sum(a.randForcedCorr) sum(a.infoChoiceCorr) sum(a.randChoiceCorr)];
 
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+a.timeoutGrace(:,1) = sum(~isnan(a.TimeoutGraceLeft),2)/2;
+a.timeoutGrace(:,2) = sum(~isnan(a.TimeoutGraceRight),2)/2;
+a.timeout = ~isnan(a.LeavingTimeout(:,1));
+
 % NOT PRESENT
 
-% a.infoForcedNP = ismember(a.outcome,[12 14]);
-% a.randForcedNP = ismember(a.outcome,[18 20]);
-% a.choiceInfoNP = ismember(a.outcome,[3 5]);
-% a.choiceRandNP = ismember(a.outcome,[7 9]);
+a.infoForcedNP = ismember(a.outcome,[12 14]);
+a.randForcedNP = ismember(a.outcome,[18 20]);
+a.choiceInfoNP = ismember(a.outcome,[3 5]);
+a.choiceRandNP = ismember(a.outcome,[7 9]);
+a.notPresent = ismember(a.outcome,[3 5 7 9 12 14 18 20]);
+
+% ERRORTYPES
+a.errorTypes = NaN(numel(a.file),1);
+
+a.errorTypes(ismember(a.outcome,[2,4,6,8,11,13,17,19]))= 1; % correct
+a.errorTypes(ismember(a.outcome,[1,10,16]))= 2; % no choice
+a.errorTypes(ismember(a.outcome,[15,21]))= 3; % incorrect
+a.errorTypes(ismember(a.outcome,[3,5,7,9,12,14,18,20]))= 4; % not present
+a.errorTypes(a.timeout==1)= 5; % timeout
+
+a.errorLabels = {'Correct','No Choice','Incorrect Choice','Not Present','Leaving Timeout'};
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -417,7 +433,7 @@ for m = 1:a.mouseCt
         okAll = a.mouseDay == d & a.mice(:,m) == 1; 
         a.daySummary.mouse{m,d} = m;
         a.daySummary.day{m,d} = d;
-        a.daySummary.outcome{m,d} = a.outcome(okAll ==1);    
+        a.daySummary.outcome{m,d} = a.outcome(okAll == 1);    
         a.daySummary.infoForced{m,d} = sum(a.infoForcedCorr(ok));
         a.daySummary.infoChoice{m,d} = sum(a.infoChoiceCorr(ok));
         a.daySummary.randForced{m,d} = sum(a.randForcedCorr(ok));
@@ -426,6 +442,8 @@ for m = 1:a.mouseCt
         a.daySummary.infoSmall{m,d} = sum(a.infoSmall(ok));
         a.daySummary.randBig{m,d} = sum(a.randBig(ok));
         a.daySummary.randSmall{m,d} = sum(a.randSmall(ok));
+        
+        a.daySummary.errors{m,d} = a.errorTypes(okAll == 1);
         
         a.daySummary.trialCt{m,d} = sum(okAll);
         a.daySummary.totalCorrectTrials{m,d} = sum(a.correct(okAll));
@@ -467,48 +485,7 @@ for m = 1:a.mouseCt
     end
 end
 
-%% COMPLETE/IN PORT
 
-for m = 1:a.mouseCt
-    ok = a.mice(:,m) == 1;
-    mouseOutcomes = a.outcome(ok);
-    mouseInitialOutcomes = a.outcome(a.mice(:,m)==1 & a.correct == 1& a.reverse==1);
-%     mouseInitialOutcomes = a.outcome(a.mice(:,m)==1 & a.reverse==1);
-    % info choice big
-    a.incomplete(m,1) =  sum(mouseOutcomes == 3)/sum(ismember(mouseOutcomes,[2 3]));
-    % info choice small
-    a.incomplete(m,2) =  sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
-    % rand choice big
-    a.incomplete(m,3) = sum(ismember(mouseOutcomes, [7]))/sum(ismember(mouseOutcomes, [6 7]));
-    % rand choice small
-    a.incomplete(m,4) =  sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
-    % info big
-    a.incomplete(m,5) =  sum(mouseOutcomes == 12)/sum(ismember(mouseOutcomes,[11 12]));    
-    % info small
-    a.incomplete(m,6) =  sum(mouseOutcomes == 14)/sum(ismember(mouseOutcomes,[13 14]));
-    a.initialIncomplete(m,1) = sum(mouseInitialOutcomes == 14)/sum(ismember(mouseInitialOutcomes,[13 14]));
-    % rand big
-    a.incomplete(m,7) =  sum(mouseOutcomes == 18)/sum(ismember(mouseOutcomes,[17 18]));
-    % rand small
-    a.incomplete(m,8) =  sum(mouseOutcomes == 20)/sum(ismember(mouseOutcomes,[19 20]));
-    
-    a.incompleteInfoRand(m,1) = sum(ismember(mouseOutcomes,[3 5 12 14])) / sum(ismember(mouseOutcomes,[2 3 4 5 11 12 13 14]));
-    a.incompleteInfoRand(m,2) = sum(ismember(mouseOutcomes,[7 9 18 20])) / sum(ismember(mouseOutcomes,[6 7 8 9 17 18 19 20]));
-        
-    for d = 1:a.mouseDayCt(m)
-        mouseOutcomes = a.daySummary.outcome{m,d};
-        a.dayIncomplete{1,d,m} = sum(mouseOutcomes == 3)/sum(ismember(mouseOutcomes,[2 3]));
-        a.dayIncomplete{2,d,m} = sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
-        a.dayIncomplete{3,d,m} = sum(mouseOutcomes == 7)/sum(ismember(mouseOutcomes, [6 7]));
-        a.dayIncomplete{4,d,m} = sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
-        a.dayIncomplete{5,d,m} = sum(mouseOutcomes == 12)/sum(ismember(mouseOutcomes,[11 12]));    
-        a.dayIncomplete{6,d,m} = sum(mouseOutcomes == 14)/sum(ismember(mouseOutcomes,[13 14]));
-        a.dayIncomplete{7,d,m} = sum(mouseOutcomes == 18)/sum(ismember(mouseOutcomes,[17 18]));
-        a.dayIncomplete{8,d,m} = sum(mouseOutcomes == 20)/sum(ismember(mouseOutcomes,[19 20]));
-    end
-end
-
-a.incompleteDifference = a.incompleteInfoRand(:,1) - a.incompleteInfoRand(:,2);
 
 %% PORT OCCUPANCY
 
