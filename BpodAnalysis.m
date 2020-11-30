@@ -448,7 +448,7 @@ for m = 1:a.mouseCt
         a.daySummary.CRewards{m,d} = a.reward(a.odorCtrials==1 & ok==1)/sum(a.odorCtrials & ok);
         a.daySummary.DRewards{m,d} = a.reward(a.odorDtrials==1 & ok==1)/sum(a.odorDtrials & ok);
         a.daySummary.randBigRewards{m,d} = a.reward(a.randBig==1 & ok==1)/sum(a.randBig & ok);
-        a.daySummary.randSmallRewards{m,d} = a.reward(a.randSmall==1 & ok==1)/sum(randSmall & ok);
+        a.daySummary.randSmallRewards{m,d} = a.reward(a.randSmall==1 & ok==1)/sum(a.randSmall & ok);
         
         a.daySummary.rewardRateInfoForced{m,d} = nansum(a.reward(a.infoForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.infoForced == 1 & okAll == 1))/60);
         a.daySummary.rewardRateRandForced{m,d} = nansum(a.reward(a.randForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.randForced == 1 & okAll == 1))/60);
