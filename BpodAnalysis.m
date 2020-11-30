@@ -331,6 +331,7 @@ a.centerEntryCount = sum(~isnan(a.CenterOdor),2)/2;
 a.completeInitiation = a.centerEntryCount == 1;
 
 % doesn't include NP (NP info small is not an error)-->NOW IT DOES!
+% how to check if timeout or not?!?
 a.infoCorrCodes = [11 13];
 a.infoIncorrCodes = [10 12 14 15];
 a.randCorrCodes = [17 19];
@@ -355,10 +356,10 @@ a.choiceTypeCtsCorr = [sum(a.infoForcedCorr) sum(a.randForcedCorr) sum(a.infoCho
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOT PRESENT
 
-a.infoForcedNP = ismember(a.outcome,[12 14]);
-a.randForcedNP = ismember(a.outcome,[18 20]);
-a.choiceInfoNP = ismember(a.outcome,[3 5]);
-a.choiceRandNP = ismember(a.outcome,[7 9]);
+% a.infoForcedNP = ismember(a.outcome,[12 14]);
+% a.randForcedNP = ismember(a.outcome,[18 20]);
+% a.choiceInfoNP = ismember(a.outcome,[3 5]);
+% a.choiceRandNP = ismember(a.outcome,[7 9]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
