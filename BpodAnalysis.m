@@ -176,10 +176,10 @@ a.rewardParams = [a.infoBigDrops a.infoSmallDrops a.randBigDrops...
 
 %% SIDE ODOR
 
-a.odorAtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
-a.odorBtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
-a.odorCtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
-a.odorDtrials = (a.leftChoice == 1 & ~isnan(a.OdorALeft(:,1))) | (a.rightChoice == 1 & ~isnan(a.OdorARight(:,1)));
+a.odorAtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorALeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorARight(:,1)));
+a.odorBtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorBLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorBRight(:,1)));
+a.odorCtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorCLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorCRight(:,1)));
+a.odorDtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorDLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorDRight(:,1)));
 
 %% REVERSAL
 
@@ -443,12 +443,12 @@ for m = 1:a.mouseCt
         a.daySummary.trialLengthRandForced{m,d} = nansum(a.trialLength(a.randForcedCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randForcedCorr == 1 & ok == 1)));
         a.daySummary.trialLengthRandChoice{m,d} = nansum(a.trialLength(a.randChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randChoiceCorr == 1 & ok == 1)));        
         
-        a.daySummary.ARewards{m,d} = a.reward(a.odorAtrials==1 & ok==1)/sum(a.odorAtrials & ok);
-        a.daySummary.BRewards{m,d} = a.reward(a.odorBtrials==1 & ok==1)/sum(a.odorBtrials & ok);
-        a.daySummary.CRewards{m,d} = a.reward(a.odorCtrials==1 & ok==1)/sum(a.odorCtrials & ok);
-        a.daySummary.DRewards{m,d} = a.reward(a.odorDtrials==1 & ok==1)/sum(a.odorDtrials & ok);
-        a.daySummary.randBigRewards{m,d} = a.reward(a.randBig==1 & ok==1)/sum(a.randBig & ok);
-        a.daySummary.randSmallRewards{m,d} = a.reward(a.randSmall==1 & ok==1)/sum(a.randSmall & ok);
+        a.daySummary.ARewards{m,d} = nansum(a.reward(a.odorAtrials==1 & ok==1))/nansum(a.odorAtrials & ok);
+        a.daySummary.BRewards{m,d} = nansum(a.reward(a.odorBtrials==1 & ok==1))/nansum(a.odorBtrials & ok);
+        a.daySummary.CRewards{m,d} = nansum(a.reward(a.odorCtrials==1 & ok==1))/nansum(a.odorCtrials & ok);
+        a.daySummary.DRewards{m,d} = nansum(a.reward(a.odorDtrials==1 & ok==1))/nansum(a.odorDtrials & ok);
+        a.daySummary.randBigRewards{m,d} = nansum(a.reward(a.randBig==1 & ok==1))/nansum(a.randBig & ok);
+        a.daySummary.randSmallRewards{m,d} = nansum(a.reward(a.randSmall==1 & ok==1))/nansum(a.randSmall & ok);
         
         a.daySummary.rewardRateInfoForced{m,d} = nansum(a.reward(a.infoForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.infoForced == 1 & okAll == 1))/60);
         a.daySummary.rewardRateRandForced{m,d} = nansum(a.reward(a.randForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.randForced == 1 & okAll == 1))/60);
@@ -514,6 +514,8 @@ a.incompleteDifference = a.incompleteInfoRand(:,1) - a.incompleteInfoRand(:,2);
 
 win = 0.050; % bins in ms
 bins = [-1:win:15];
+a.bins=bins;
+a.win = win;
 
 % portnames = {'Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
 % 

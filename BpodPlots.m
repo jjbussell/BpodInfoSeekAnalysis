@@ -134,7 +134,7 @@ for m = 1:a.mouseCt
         bar(i,outcomeCounts(i),'FaceColor',CCfinal(i,:),'EdgeColor','none');
     end
     xlabel('Outcomes on most recent day');
-%     lgd = legend(ax,a.outcomeLabels,'Location','southoutside','Orientation','horizontal');
+%     lgd = legend(ax,a.outcomeLabels,'Location','eastoutside','Orientation','vertical');
 %     lgd.Box = 'off';
 %     lgd.FontWeight = 'bold'; 
     hold off;
@@ -159,6 +159,7 @@ for m = 1:a.mouseCt
 
     ax = nsubplot(3,2,1,2);
     ax.FontSize = 8;
+    title(a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')});        
     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
     ax.YLim = [0 inf];
     plot(cell2mat(a.daySummary.ARewards(m,:)),'Color','g','LineWidth',1);
@@ -180,7 +181,6 @@ for m = 1:a.mouseCt
 
     ax = nsubplot(3,2,2,2);
     ax.FontSize = 8;
-    title(a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')});    
     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
 %     ax.YLim = [6000 20000];
     plot(cell2mat(a.daySummary.infoIncorr(m,:)),'Color',purple,'LineWidth',1);
@@ -238,7 +238,80 @@ for m = 1:a.mouseCt
     
 end
 
+
+%% PLOT OUTCOMES BY MOUSE FOR CURRENT MICE - ONLY WORKS FOR FSM
+
+    %% STACKED BARS
+
+% for m = 1:a.mouseCt   
+    
+for mm = 1:numel(a.currentMice)
+    m=a.currentMice(mm);
+    outcomeCounts = [];
+    outcomeBins = [];
+    
+    if a.mouseDayCt(m) > 3
+        for d = 1:a.mouseDayCt(m)
+            [outcomeCounts(d,:),outcomeBins(d,:)] = histcounts(a.daySummary.outcome{m,d},[0.5:1:21.5],'Normalization','probability');
+        end
+        figure();
+        fig = gcf;
+        fig.PaperUnits = 'inches';
+        fig.PaperPosition = [1 1 10 8];
+        set(fig,'renderer','painters')
+        set(fig,'PaperOrientation','landscape');
+        
+        ax = nsubplot(1,1,1,1);
+        title(a.mouseList(m));
+        ax.FontSize = 10;
+        ylabel('Trial Outcomes (% of trials)');
+        xlabel('Day');
+        ax.YLim = [0 1];
+        ax.YTick = [0:0.25:1];
+        ax.XLim = [0 a.mouseDayCt(m)+1];
+        ax.XTick = [1:10:a.mouseDayCt(m)];
+        ax.XTickLabel = [1:10:a.mouseDayCt(m)];
+        colormap(fig,CCfinal);
+        bar(outcomeCounts,'stacked');
+        set(gca, 'ydir', 'reverse');
+        lgd = legend(ax,a.outcomeLabels,'Location','eastoutside');
+        lgd.Box = 'off';
+        lgd.FontWeight = 'bold';
+
+    else
+        figure();
+        fig = gcf;
+        fig.PaperUnits = 'inches';
+        fig.PaperPosition = [1 1 10 7];
+    %     set(fig,'PaperOrientation','landscape');
+        set(fig,'renderer','painters')
+        for d = 1:a.mouseDayCt(m)
+            ax = nsubplot(a.mouseDayCt(m),1,d,1);
+            if d==1
+            title(a.mouseList(m));       
+            end
+            ax.FontSize = 10;
+            [outcomeCounts,outcomeBins] = histcounts(a.daySummary.outcome{m,d},[0.5:1:21.5],'Normalization','probability');
+            bar([1:21],outcomeCounts);
+            plot([9.5 9.5],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+            plot([15.5 15.5],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);    
+            if d == ceil(a.mouseDayCt(m)/2)
+                ylabel('Trial Outcomes (% of trials)');
+            end
+            if d == a.mouseDayCt(m)
+                ax.XTick = [1:21];
+            set(gca,'XTickLabel',a.outcomeLabels,'XTickLabelRotation',35)
+            end
+        end
+    end
+    saveas(fig,fullfile(pathname,['outcomesStacked' a.mouseList{m}]),'pdf');
+%     close(fig);
+end
+
+
 %% PORT PROBABILITY
+
+bins = a.bins;
 
 for m = 1:a.mouseCt
     figure();
@@ -365,7 +438,7 @@ if a.choiceMouseCt > 1
 end
 
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -399,7 +472,7 @@ end
 
     %% LOGISTIC REGRESSION ON TRIALS TO COUNT (regression.pdf) 
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -431,7 +504,7 @@ end
 
 %% PERCENT INFO CHOICE BY SIDE
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -460,7 +533,7 @@ if ~isempty(a.reverseMice)
 %     close(fig);
 end
 
-    if ~isempty(a.reverseMice)
+    if sum(a.reverseMice)>0
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -493,7 +566,7 @@ end
     
     %% PREFERENCE VS LEAVING
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -523,7 +596,7 @@ saveas(fig,fullfile(pathname,'Prefbyleaving'),'pdf');
 end
 
 %% initial pref vs initial leaving
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -553,7 +626,7 @@ saveas(fig,fullfile(pathname,'InitPrefbyleaving'),'pdf');
 end
 
 %% initial pref vs days of training
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -589,7 +662,7 @@ saveas(fig,fullfile(pathname,'InitPrefbytraining'),'pdf');
 end
 
 %% initial pref vs initial rxn
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -621,7 +694,7 @@ end
 
 %% MEAN PREFERENCE (INDEX)
 
-if ~isempty(a.reverseMice)
+if sum(a.reverseMice)>0
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -875,7 +948,7 @@ end
     
     %% PLOT REWARD RATE DIFF AROUND REVERSALS
 
-% if numel(a.reverseMice) > 1
+% if sum(a.reverseMice)>0
     fig = figure();
     
     fig = gcf;
