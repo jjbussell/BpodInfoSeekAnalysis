@@ -235,6 +235,7 @@ for m = 1:a.mouseCt
             for r = 1:numel(reverses)
                a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse 
             end
+            a.lastParamDay(m,1) = sortedMouseDays(lastRevTrial);
             
             for r = 1:numel(reverses)-1
 %                 a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
@@ -280,6 +281,7 @@ a.currentMice = find(strcmp(a.mouseList,a.currentMiceList));
 a.choiceMiceList = a.mouseList(a.choiceMice==1);
 a.choiceMouseCt = sum(a.choiceMice);
 
+a.reverseMice = find(a.reverseMice);
 a.reverseMiceList  = a.mouseList(a.reverseMice==1);
 
 a.imagingMice = zeros(a.mouseCt,1);
@@ -697,7 +699,7 @@ end
 
 %% OVERALL CHOICES BY SIDE
 
-if sum(a.reverseMice)>0
+if numel(a.reverseMice)>0
     for m = 1:a.mouseCt
        ok = a.mice(:,m) == 1 & a.trialType == 1 & a.trialTypes == 5 & a.reverse~= 0 & a.correct == 1; % need to match params
        a.overallChoice(m,1) = mean(a.info(ok & a.infoSide == 0)); % info side = 0
@@ -751,7 +753,7 @@ a.goodRxn = a.rxn<8000 & a.rxn>100;
 %%
 % RELATIVE TO CURRENT INFO SIDE
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
 for m=1:a.mouseCt  
     ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
     ok1Idx = find(ok1);
@@ -819,19 +821,20 @@ end
 % 
 %% DAYS AROUND REVERSES
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
 
     a.reversalDays = NaN(numel(a.reverseMice),4);
 
     for m = 1:numel(a.reverseMice)
         mm=a.reverseMice(m);
         a.reversalDays(m,1) = a.reverseDay{mm,1}-1; % day prior to 1st reversal
-        if size(a.reverseDay(mm,:),2) > 1
+        if size(cell2mat(a.reverseDay(mm,:)),2) > 1
             if ~isempty(a.reverseDay{mm,2})
             a.reversalDays(m,2) = a.reverseDay{mm,2}-1; % day prior to second reversal
 
             % last day of second reversal (either r+3/last day or last day before get
             % ready for values)
+            % use a.lastParamDay for value mice!
 %             if ~ismember(mm,a.valueMice)
                 if ~isempty(a.reverseDay{mm,3})
                     a.reversalDays(m,3) = a.reverseDay{mm,3}-1; % day prior to third reversal
