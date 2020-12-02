@@ -436,7 +436,7 @@ if a.choiceMouseCt > 1
 end
 
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -470,7 +470,7 @@ end
 
     %% LOGISTIC REGRESSION ON TRIALS TO COUNT (regression.pdf) 
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -502,7 +502,7 @@ end
 
 %% PERCENT INFO CHOICE BY SIDE
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -531,7 +531,7 @@ if sum(a.reverseMice)>0
 %     close(fig);
 end
 
-    if sum(a.reverseMice)>0
+    if ~isempty(a.reverseMice)
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -564,7 +564,7 @@ end
     
     %% PREFERENCE VS LEAVING
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -594,7 +594,7 @@ saveas(fig,fullfile(pathname,'Prefbyleaving'),'pdf');
 end
 
 %% initial pref vs initial leaving
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -624,7 +624,7 @@ saveas(fig,fullfile(pathname,'InitPrefbyleaving'),'pdf');
 end
 
 %% initial pref vs days of training
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -660,7 +660,7 @@ saveas(fig,fullfile(pathname,'InitPrefbytraining'),'pdf');
 end
 
 %% initial pref vs initial rxn
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -692,7 +692,7 @@ end
 
 %% MEAN PREFERENCE (INDEX)
 
-if sum(a.reverseMice)>0
+if ~isempty(a.reverseMice)
     fig = figure();
     fig.PaperUnits = 'inches';
     fig.PaperPosition = [0.5 0.5 10 7];
@@ -946,7 +946,7 @@ end
     
     %% PLOT REWARD RATE DIFF AROUND REVERSALS
 
-% if sum(a.reverseMice)>0
+% if ~isempty(a.reverseMice)
     fig = figure();
     
     fig = gcf;
