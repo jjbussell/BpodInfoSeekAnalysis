@@ -276,6 +276,7 @@ end
 dayDates = datetime(unique(a.day),'InputFormat','yyyyMMdd');
 toDay = string(datetime(max(dayDates),'Format','yyyyMMdd'));
 thisDay = a.day == toDay;
+a.today = thisDay;
 a.currentMiceList = unique(a.mouse(thisDay));
 a.currentMice = find(ismember(a.mouseList,a.currentMiceList));
 
