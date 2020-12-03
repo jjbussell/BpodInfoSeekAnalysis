@@ -1017,18 +1017,24 @@ end
 
 
 %% INFO vs RAND STATS OVERALL (not by day)
+
+% do these need to be for correct??
+% CHANGE BACK TO ONLY PREF DAYS!
+
 for m=1:a.mouseCt
-    ok = a.mice(:,m)==1 & a.trialTypes == 5 & a.reverse~= 0& a.forcedCorrTrials == 1;
-    a.rxnMean(m,1) = nanmean(a.rxn(ok & a.choiceCorr==1));
-    a.rxnMean(m,2) = nanmean(a.rxn(ok & a.choiceCorr==0));
+%     ok = a.mice(:,m)==1 & a.trialTypes == 5 & a.reverse~= 0& a.forcedCorrTrials == 1;
+    ok = a.mice(:,m)==1 &  a.forcedCorrTrials == 1;
+    a.rxnMean(m,1) = nanmean(a.rxn(ok & a.info==1 & a.correct==1));
+    a.rxnMean(m,2) = nanmean(a.rxn(ok & a.info==0 & a.correct==1));
     a.rxnDiff(m,1) = a.rxnMean(m,1) - a.rxnMean(m,2);
     for i = 1:numel(a.reverseTypes)
        r = a.reverseTypes(i);
-       a.rxnInfoRev(m,i) = nanmean(a.rxn(ok & a.reverse==r & a.choiceCorr == 1));
-       a.rxnRandRev(m,i) = nanmean(a.rxn(ok & a.reverse==r & a.choiceCorr == 0));
+       a.rxnInfoRev(m,i) = nanmean(a.rxn(ok & a.reverse==r & a.info == 1 & a.correct==1));
+       a.rxnRandRev(m,i) = nanmean(a.rxn(ok & a.reverse==r & a.info == 0 & a.correct==1));
     end
     
-    okAll = a.mice(:,m)==1 & a.reverse~= 0;
+%     okAll = a.mice(:,m)==1 & a.reverse~= 0;
+    okAll = a.mice(:,m)==1;
     a.rewardRate(m,1) = nansum(a.reward(a.info == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 1 & okAll == 1))/1000/60);
     a.rewardRate(m,2) = nansum(a.reward(a.info == 0 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 0 & okAll == 1))/1000/60);
     a.rewardDiff(m,1) = a.rewardRate(m,1) - a.rewardRate(m,2);
