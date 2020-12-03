@@ -278,7 +278,7 @@ toDay = string(datetime(max(dayDates),'Format','yyyyMMdd'));
 thisDay = a.day == toDay;
 a.today = thisDay;
 a.currentMiceList = unique(a.mouse(thisDay));
-a.currentMice = find(strcmp(a.mouseList,a.currentMiceList));
+a.currentMice = find(ismember(a.mouseList,a.currentMiceList));
 
 a.choiceMiceList = a.mouseList(a.choiceMice==1);
 a.choiceMouseCt = sum(a.choiceMice);
@@ -388,6 +388,29 @@ a.errorTypes(ismember(a.outcome,[3,5,7,9,12,14,18,20]))= 4; % not present
 a.errorTypes(a.timeout==1)= 5; % timeout
 
 a.errorLabels = {'Correct','No Choice','Incorrect Choice','Not Present','Leaving Timeout'};
+
+for m = 1:a.mouseCt
+    ok = a.mice(:,m) == 1;
+    mouseOutcomes = a.outcome(ok);
+    mouseInitialOutcomes = a.outcome(a.mice(:,m)==1 & a.reverse==1);
+    % info choice big
+    a.incomplete(m,1) =  sum(mouseOutcomes == 3)/sum(ismember(mouseOutcomes,[2 3]));
+    % info choice small
+    a.incomplete(m,2) =  sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
+    % rand choice big
+    a.incomplete(m,3) = sum(ismember(mouseOutcomes, [7]))/sum(ismember(mouseOutcomes, [6 7]));
+    % rand choice small
+    a.incomplete(m,4) =  sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
+    % info big
+    a.incomplete(m,5) =  sum(mouseOutcomes == 12)/sum(ismember(mouseOutcomes,[11 12]));    
+    % info small
+    a.incomplete(m,6) =  sum(mouseOutcomes == 14)/sum(ismember(mouseOutcomes,[13 14]));
+    a.initialIncomplete(m,1) = sum(mouseInitialOutcomes == 14)/sum(ismember(mouseInitialOutcomes,[13 14]));
+    % rand big
+    a.incomplete(m,7) =  sum(mouseOutcomes == 18)/sum(ismember(mouseOutcomes,[17 18]));
+    % rand small
+    a.incomplete(m,8) =  sum(mouseOutcomes == 20)/sum(ismember(mouseOutcomes,[19 20]));
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
