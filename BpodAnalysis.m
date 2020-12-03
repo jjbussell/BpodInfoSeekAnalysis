@@ -628,15 +628,7 @@ a.infoPort(infoRight,:) = a.Port3(infoRight,:);
 a.randPort(infoLeft,:) = a.Port3(infoLeft,:);
 a.randPort(infoRight,:) = a.Port1(infoRight,:);
 
-%%
-save('infoSeekBpodDataAnalyzed.mat','a');
-% uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
-save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% TO ADD
 
@@ -1042,7 +1034,15 @@ for m=1:a.mouseCt
     a.rewardDiff(m,1) = a.rewardRate(m,1) - a.rewardRate(m,2);
 end
 
+%%
+save('infoSeekBpodDataAnalyzed.mat','a');
+% uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
+save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 

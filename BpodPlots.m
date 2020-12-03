@@ -727,7 +727,7 @@ if ~isempty(a.reverseMice)
 end
 
     %% REACTION SPEED REGRESSION
-
+if ~isempty(a.reverseMice)
     bothSig = a.preRevRxnSpeed(:,3)<0.05 & a.postRevRxnSpeed(:,3)<0.05;
 
     for m = 1:a.mouseCt
@@ -782,9 +782,9 @@ end
 
     saveas(fig,fullfile(pathname,'PrevsPostRxn'),'pdf');
 %     close(fig);
-
+end
 %% PLOT MEAN CHOICES AROUND REVERSALS
-
+if ~isempty(a.reverseMice)
     fig = figure();
     
     fig = gcf;
@@ -815,9 +815,9 @@ end
     hold off;
     
     saveas(fig,fullfile(pathname,'ReversalMultiChoices'),'pdf');
-    
+end   
 %% PLOT MEAN CHOICES AROUND REVERSALS (single days)
-
+if ~isempty(a.reverseMice)
 % if a.choiceMouseCt > 1
     fig = figure();
     
@@ -882,9 +882,9 @@ end
     
     saveas(fig,fullfile(pathname,'ReversalRxn'),'pdf');
 % end
-
+end
 %% REACTION SPEED PLOT
-
+if ~isempty(a.reverseMice)
     fig = figure();
     
     fig = gcf;
@@ -912,7 +912,7 @@ end
     xticklabels({'Info','No Info'});
     ylabel('Reaction time on last session before reversal');
     saveas(fig,fullfile(pathname,'ReactionTime'),'pdf');
-    
+end    
     
     %% REACTION TIME PLOT ALL DAYS
 
@@ -946,7 +946,7 @@ end
     
     %% PLOT REWARD RATE DIFF AROUND REVERSALS
 
-% if ~isempty(a.reverseMice)
+if ~isempty(a.reverseMice)
     fig = figure();
     
     fig = gcf;
@@ -979,10 +979,10 @@ end
     
     saveas(fig,fullfile(pathname,'ReversalRewardRate'),'pdf');
     
-% end
+end
 
 %% REWARD RATE PRE-REVERSE PLOT
-
+if ~isempty(a.reverseMice)
     fig = figure();
 
     fig = gcf;
@@ -1021,7 +1021,7 @@ end
     % plot(a.reversalRewardRateIdx(:,1),a.reversalMultiPrefs(:,1),'Color','k','LineStyle','none','Marker','o','MarkerFaceColor','k','MarkerSize',10);
 
     saveas(fig,fullfile(pathname,'RewardRate'),'pdf');
-    
+end  
     
 %% REWARD RATE ALL DAYS
 
@@ -1055,6 +1055,7 @@ end
 
 
 %% pref vs reward rate
+if ~isempty(a.reverseMice)
 fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
@@ -1081,10 +1082,11 @@ hold off;
 
 saveas(fig,fullfile(pathname,'Prefbyreward'),'pdf');
 %     close(fig);   
-    
+end  
     
     %% initial pref vs initial reward rate
-fig = figure();
+if ~isempty(a.reverseMice)
+    fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
 set(fig,'renderer','painters');
@@ -1110,3 +1112,4 @@ hold off;
 
 saveas(fig,fullfile(pathname,'InitPrefbyreward'),'pdf');
 %     close(fig); 
+end
