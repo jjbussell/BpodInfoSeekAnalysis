@@ -107,8 +107,17 @@ for m = 1:a.mouseCt
             ax.XTick = [0:5:a.mouseDayCt(m)];
 %         end
 %         ax.XLim = [1 a.mouseDayCt(m)]; 
+        ax.YLim = [0 300];
         xlabel('Day')
         plot(1:a.mouseDayCt(m),cell2mat(a.daySummary.totalCorrectTrials(m,:)),'Color','k','LineWidth',1,'Marker','o','MarkerFaceColor','k','MarkerSize',2);
+        for d = 1:a.mouseDayCt(m)
+%             text(d,275,num2str(a.daySummary.totalWater{m,d}),'Fontsize',5,'Color','r');
+            text(d,275,num2str(a.daySummary.maxDelay{m,d}),'Fontsize',5,'Color','r');
+            if d == a.mouseDayCt(m)
+%                text(d+.2,275,'Total Water','Fontsize',7,'Color','r');
+               text(d+.2,275,'Delay','Fontsize',7,'Color','r');
+            end
+        end          
         ylabel('TotalCorrectTrials');
 %         ax.YLim = [0 100];
 %         ax.YTick = [0 25 50 75 100];

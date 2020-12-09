@@ -174,6 +174,9 @@ a.randProb = [a.trialSettings.RandRewardProb]';
 a.rewardParams = [a.infoBigDrops a.infoSmallDrops a.randBigDrops...
     a.randSmallDrops a.infoProb a.randProb];
 
+a.odorDelay = [a.trialSettings.OdorDelay]';
+a.rewardDelay = [a.trialSettings.RewardDelay]';
+
 %% SIDE ODOR
 
 a.odorAtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorALeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorARight(:,1)));
@@ -491,6 +494,8 @@ for m = 1:a.mouseCt
         a.daySummary.trialLengthInfoChoice{m,d} = nansum(a.trialLength(a.infoChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.infoChoiceCorr == 1 & ok == 1)));
         a.daySummary.trialLengthRandForced{m,d} = nansum(a.trialLength(a.randForcedCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randForcedCorr == 1 & ok == 1)));
         a.daySummary.trialLengthRandChoice{m,d} = nansum(a.trialLength(a.randChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randChoiceCorr == 1 & ok == 1)));        
+        
+        a.daySummary.maxDelay{m,d} = max(a.odorDelay(ok))+max(a.rewardDelay(ok));
         
         a.daySummary.ARewards{m,d} = nansum(a.reward(a.odorAtrials==1 & ok==1))/nansum(a.odorAtrials & ok);
         a.daySummary.BRewards{m,d} = nansum(a.reward(a.odorBtrials==1 & ok==1))/nansum(a.odorBtrials & ok);
