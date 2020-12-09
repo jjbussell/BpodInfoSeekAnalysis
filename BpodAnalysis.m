@@ -428,11 +428,11 @@ a.randSmallReward = [a.trialSettings.RandSmallDrops]' * 4;
 a.leftDrops = a.GlobalTimer3_End - a.GlobalTimer3_Start;
 a.leftRewardDrops = NaN(size(a.leftDrops));
 a.leftRewardDrops(a.leftDrops>0.01) = 1;
-a.leftReward = sum(a.leftRewardDrops,2)*dropSize;
+a.leftReward = nansum(a.leftRewardDrops,2)*dropSize;
 a.rightDrops = a.GlobalTimer4_End - a.GlobalTimer4_Start;
 a.rightRewardDrops = NaN(size(a.rightDrops));
 a.rightRewardDrops(a.rightDrops>0.01) = 1;
-a.rightReward = sum(a.rightRewardDrops,2)*dropSize;
+a.rightReward = nansum(a.rightRewardDrops,2)*dropSize;
 a.reward = nansum([a.leftReward, a.rightReward],2);
 
 %% OUTCOMES
