@@ -1,6 +1,6 @@
 %% SAVEPATH
 
-laptoppath = 'C:\Users\jbuss\Dropbox\BpodInfoseek\Data\Graphs';
+laptoppath = 'C:\Users\jbuss\Dropbox\BpodInfoseek\Graphs';
 
 if exist('D:\Dropbox\BpodInfoseek\Graphs')
   pathname = 'D:\Dropbox\BpodInfoseek\Graphs';
@@ -195,6 +195,7 @@ for m = 1:a.mouseCt
     plot(cell2mat(a.daySummary.infoIncorr(m,:)),'Color',purple,'LineWidth',1);
     plot(cell2mat(a.daySummary.randIncorr(m,:)),'Color',orange,'LineWidth',1);
     plot(cell2mat(a.daySummary.choiceIncorr(m,:)),'Color',[0.5 0.5 0.5],'LineWidth',1);
+    plot(1:a.mouseDayCt(m),ones(1,a.mouseDayCt(m))*0.25,'Color','r','LineWidth',1,'LineStyle','--');
 %     for r = 1:numel(cell2mat(a.reverseDay(m,:)))
 %         plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
 %     end
