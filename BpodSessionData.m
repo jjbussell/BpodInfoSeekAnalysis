@@ -317,10 +317,10 @@ end
 
 % a.trialCt = [a.data(:).nTrials];
 
-save('infoSeekBpodData.mat','a');
+save('infoSeekBpodData.mat','a','-v7.3');
 % uisave({'a'},'infoSeekFSMData.mat');
 
-save(['infoSeekBpodData' datestr(now,'yyyymmdd')],'a');
+save(['infoSeekBpodData' datestr(now,'yyyymmdd')],'a','-v7.3');
 
 
 
