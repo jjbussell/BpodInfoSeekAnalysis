@@ -283,8 +283,9 @@ a.today = thisDay;
 a.currentMiceList = unique(a.mouse(thisDay));
 a.currentMice = find(ismember(a.mouseList,a.currentMiceList));
 
-a.choiceMiceList = a.mouseList(a.choiceMice==1);
-a.choiceMouseCt = sum(a.choiceMice);
+a.choiceMice = find(a.choiceMice);
+a.choiceMiceList = a.mouseList(a.choiceMice);
+a.choiceMouseCt = numel(a.choiceMice);
 
 a.reverseMice = find(a.reverseMice);
 a.reverseMiceList  = a.mouseList(a.reverseMice==1);
