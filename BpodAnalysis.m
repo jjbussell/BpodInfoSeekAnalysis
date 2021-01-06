@@ -215,6 +215,7 @@ for m = 1:a.mouseCt
         sortedMouseTrialTypes = mouseTrialTypes(mouseDayIdx);
         sortedMouseFile = mouseFile(mouseDayIdx);
         firstChoiceIdx = find(sortedMouseTrialTypes == 5,1,'First'); % idx into sorted -- for mouseTrialsIdx b/c it's sorted
+        lastChoiceIdx = find(sortedMouseTrialTypes == 5,1,'Last');
         firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
         firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
         a.firstChoiceDay(1,m) = sortedMouseDays(firstChoiceIdx);
@@ -268,11 +269,13 @@ for m = 1:a.mouseCt
 %             okInfoPostRev = find(ok3==1,300,'last');
 %             ok4 = a.mice(:,m) == 1 & & a.trialType == 3 & a.correct == 1 & a.reverse == -1;
 %             okRandPostRev = find(ok4==1,300,'last');
-            
+        else
+            a.reverse(mouseTrialsIdx(firstChoiceIdx:lastChoiceIdx)) = 1;
         end
     end
 end
 
+a.choiceMice = find(a.choiceMice);
 
 %% MOUSE CATEGORIES
 
@@ -283,7 +286,7 @@ a.today = thisDay;
 a.currentMiceList = unique(a.mouse(thisDay));
 a.currentMice = find(ismember(a.mouseList,a.currentMiceList));
 
-a.choiceMice = find(a.choiceMice);
+
 a.choiceMiceList = a.mouseList(a.choiceMice);
 a.choiceMouseCt = numel(a.choiceMice);
 
@@ -651,7 +654,7 @@ later opto, imaging, values, licking!!
 
 trialsToCount = 300;
 
-if sum(a.choiceMice)>0
+if ~isempty(a.choiceMice)
     
     a.meanChoice = NaN(a.mouseCt,3);
     a.choiceCI = NaN(a.mouseCt,2);
@@ -1048,10 +1051,10 @@ for m=1:a.mouseCt
 end
 
 %%
-save('infoSeekBpodDataAnalyzed.mat','a');
+save('infoSeekBpodDataAnalyzed.mat','a','-v7.3');
 % uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
-save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
+save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a','-v7.3');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
