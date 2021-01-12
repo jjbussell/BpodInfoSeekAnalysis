@@ -227,6 +227,7 @@ for m = 1:a.mouseCt
         if ~isempty(find(mouseInfoSideDiff) ~= 0)
             a.reverseMice(m,1) = 1;
             sortedMouseParams = mouseParams(mouseDayIdx,:);
+            sortedMouseParams = sortedMouseParams(firstChoiceIdx:end);
             paramChange = find(diff(sortedMouseParams,1,1)~=0,1,'first');
             if ~isempty(paramChange)
                 lastRevTrial = paramChange; % into sorted trials
@@ -241,20 +242,24 @@ for m = 1:a.mouseCt
                a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse 
             end
             a.lastParamDay(m,1) = sortedMouseDays(lastRevTrial);
-            
-            for r = 1:numel(reverses)-1
-%                 a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
-%                 a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse
-                if r==1
-                    a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
-                    a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
-                elseif r>1 & r<numel(reverses)-2
-                    a.reverse(mouseTrialsIdx(reversesIdx(r)+1:reversesIdx(r+1))) = r;
-                    a.reverse(mouseTrialsIdx(reversesIdx(r+1)+1:reversesIdx(r+2))) = -r;
-                else
-                    a.reverse(mouseTrialsIdx(reversesIdx(r)+1:reversesIdx(r+1))) = r;
-                    a.reverse(mouseTrialsIdx(reversesIdx(r+1)+1:lastRevTrial)) = -r;
+            if numel(reverses)>1
+                for r = 1:numel(reverses)-1
+    %                 a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
+    %                 a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse
+                    if r==1
+                        a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
+                        a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
+                    elseif r>1 & r<numel(reverses)-2
+                        a.reverse(mouseTrialsIdx(reversesIdx(r)+1:reversesIdx(r+1))) = r;
+                        a.reverse(mouseTrialsIdx(reversesIdx(r+1)+1:reversesIdx(r+2))) = -r;
+                    else
+                        a.reverse(mouseTrialsIdx(reversesIdx(r)+1:reversesIdx(r+1))) = r;
+                        a.reverse(mouseTrialsIdx(reversesIdx(r+1)+1:lastRevTrial)) = -r;
+                    end
                 end
+            else
+                a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
+                a.reverse(mouseTrialsIdx(reversesIdx(1)+1:lastRevTrial)) = -1;
             end
             
 %             % REACTION AND LICKS REL TO CURR INFO SIDE4r
