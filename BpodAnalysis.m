@@ -296,7 +296,7 @@ a.choiceMiceList = a.mouseList(a.choiceMice);
 a.choiceMouseCt = numel(a.choiceMice);
 
 a.reverseMice = find(a.reverseMice);
-a.reverseMiceList  = a.mouseList(a.reverseMice==1);
+a.reverseMiceList  = a.mouseList(a.reverseMice);
 
 a.imagingMice = zeros(a.mouseCt,1);
 
