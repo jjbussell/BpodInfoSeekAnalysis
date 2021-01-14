@@ -309,8 +309,8 @@ a.rxnSpeed = 1./a.rxn;
 a.goodRxn = a.rxn<8000 & a.rxn>100;
 
 a.trialLengthTotal = a.endTime - a.startTime;
-a.trialLength = a.endTime - a.GoCue(:,1) + a.startTime;
-a.trialLengthCenterEntry = a.endTime - a.CenterDelay(:,1) + a.startTime;
+a.trialLength = a.endTime - (a.GoCue(:,1) + a.startTime);
+a.trialLengthCenterEntry = a.endTime - (a.CenterDelay(:,1) + a.startTime);
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -499,10 +499,10 @@ for m = 1:a.mouseCt
         
         a.daySummary.rxnSpeedIdx{m,d} = (nanmean(a.rxnSpeed(ok & a.forcedCorrTrials == 1 & a.choice_all == 1)) - nanmean(a.rxnSpeed(ok & a.forcedCorrTrials == 1 & a.choice_all == 0)))/(nanmean(a.rxnSpeed(ok & a.forcedCorrTrials == 1 & a.choice_all == 1)) + nanmean(a.rxnSpeed(ok & a.forcedCorrTrials == 1 & a.choice_all == 0)));        
         
-        a.daySummary.trialLengthInfoForced{m,d} = nansum(a.trialLength(a.infoForcedCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.infoForcedCorr == 1 & ok == 1)));
-        a.daySummary.trialLengthInfoChoice{m,d} = nansum(a.trialLength(a.infoChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.infoChoiceCorr == 1 & ok == 1)));
-        a.daySummary.trialLengthRandForced{m,d} = nansum(a.trialLength(a.randForcedCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randForcedCorr == 1 & ok == 1)));
-        a.daySummary.trialLengthRandChoice{m,d} = nansum(a.trialLength(a.randChoiceCorr == 1 & ok == 1))/sum(~isnan(a.trialLength(a.randChoiceCorr == 1 & ok == 1)));        
+        a.daySummary.trialLengthInfoForced{m,d} = nansum(a.trialLength(a.infoForced == 1 & okAll == 1))/sum(~isnan(a.trialLength(a.infoForced == 1 & okAll == 1)));
+        a.daySummary.trialLengthInfoChoice{m,d} = nansum(a.trialLength(a.infoChoice == 1 & okAll == 1))/sum(~isnan(a.trialLength(a.infoChoice == 1 & okAll == 1)));
+        a.daySummary.trialLengthRandForced{m,d} = nansum(a.trialLength(a.randForced == 1 & okAll == 1))/sum(~isnan(a.trialLength(a.randForced == 1 & okAll == 1)));
+        a.daySummary.trialLengthRandChoice{m,d} = nansum(a.trialLength(a.randChoice == 1 & okAll == 1))/sum(~isnan(a.trialLength(a.randChoice == 1 & okAll == 1)));        
         
         a.daySummary.maxDelay{m,d} = max(a.odorDelay(ok))+max(a.rewardDelay(ok));
         
