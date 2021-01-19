@@ -117,7 +117,7 @@ for mm = 1:numel(a.currentMice)
             text(d,275,num2str(a.daySummary.maxDelay{m,d}),'Fontsize',5,'Color','r');
             if d == a.mouseDayCt(m)
 %                text(d+.2,275,'Total Water','Fontsize',7,'Color','r');
-               text(d+.2,275,'Delay','Fontsize',7,'Color','r');
+               text(d+.3,275,'Delay','Fontsize',7,'Color','r');
             end
         end          
         ylabel('TotalCorrectTrials');
