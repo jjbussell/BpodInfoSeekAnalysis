@@ -546,6 +546,7 @@ for m = 1:a.mouseCt
         a.daySummary.infoSmallNP{m,d} = sum(ismember(outcomes,[5 14]))/sum(ismember(outcomes,[4 5 13 14]));
         a.daySummary.randBigNP{m,d} = sum(ismember(outcomes,[7 18]))/sum(ismember(outcomes,[6 7 17 18]));
         a.daySummary.randSmallNP{m,d} = sum(ismember(outcomes,[9 20]))/sum(ismember(outcomes,[8 9 19 20]));
+        a.daySummary.leavingIDX{m,d} = sum(ismember(outcomes,[5 14]))/sum(ismember(outcomes,[5 14 9 20]));
     end
 end
 
