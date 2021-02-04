@@ -353,9 +353,13 @@ a.randCorrTrials = a.info == 0 & a.correct == 1;
 a.timeoutGrace(:,1) = sum(~isnan(a.TimeoutGraceLeft),2)/2;
 a.timeoutGrace(:,2) = sum(~isnan(a.TimeoutGraceRight),2)/2;
 a.timeout = ~isnan(a.LeavingTimeout(:,1));
+a.timeoutTime = NaN(a.trialCt,1);
+a.timeoutTime(~isnan(a.timeout)) = a.LeavingTimeout(~isnan(a.timeout),2)-a.LeavingTimeout(~isnan(a.timeout),1);
 for t = 1:a.trialCt
     if ~isempty(a.trialSettings(t).Timeout)
-a.timeoutParam(t,1) = a.trialSettings(t).Timeout;
+        a.timeoutParam(t,1) = a.trialSettings(t).Timeout;
+    else
+        a.timeoutParam(t,1) = 0;
     end
 end
 
@@ -415,7 +419,7 @@ for m = 1:a.mouseCt
     % info choice small
     a.incomplete(m,2) =  sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
     % rand choice big
-    a.incomplete(m,3) = sum(ismember(mouseOutcomes, [7]))/sum(ismember(mouseOutcomes, [6 7]));
+    a.incomplete(m,3) = sum(mouseOutcomes == 7))/sum(ismember(mouseOutcomes, [6 7]));
     % rand choice small
     a.incomplete(m,4) =  sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
     % info big
@@ -511,6 +515,11 @@ for m = 1:a.mouseCt
         
         a.daySummary.maxDelay{m,d} = max(a.odorDelay(ok))+max(a.rewardDelay(ok));
         
+        a.daySummary.maxTimeout{m,d} = max(a.timeoutParam(ok));
+        a.daySummary.timeoutCount{m,d} = sum(a.timeout(ok));
+        a.daySummary.timeout{m,d} = a.daySummary.timeoutCount{m,d}/a.daySummary.totalCorrectTrials{m,d}; % of all trials
+        a.daySummary.timeoutTime{m,d} = nansum(a.timeoutTime(ok)); %seconds
+        
         a.daySummary.ARewards{m,d} = nansum(a.reward(a.odorAtrials==1 & ok==1))/nansum(a.odorAtrials & ok);
         a.daySummary.BRewards{m,d} = nansum(a.reward(a.odorBtrials==1 & ok==1))/nansum(a.odorBtrials & ok);
         a.daySummary.CRewards{m,d} = nansum(a.reward(a.odorCtrials==1 & ok==1))/nansum(a.odorCtrials & ok);
@@ -531,7 +540,12 @@ for m = 1:a.mouseCt
         a.daySummary.randIncorr{m,d} = sum(ismember(outcomes,a.randIncorrCodes))/(sum(ismember(outcomes,a.randCorrCodes))+sum(ismember(outcomes,a.randIncorrCodes)));
         a.daySummary.choiceCorr{m,d} = sum(ismember(outcomes,a.choiceCorrCodes))/(sum(ismember(outcomes,a.choiceCorrCodes))+sum(ismember(outcomes,a.choiceIncorrCodes)));                
         a.daySummary.choiceIncorr{m,d} = sum(ismember(outcomes,a.choiceIncorrCodes))/(sum(ismember(outcomes,a.choiceCorrCodes))+sum(ismember(outcomes,a.choiceIncorrCodes)));        
-    
+
+        
+        a.daySummary.infoBigNP{m,d} = sum(ismember(outcomes,[3 12]))/sum(ismember(outcomes,[2 3 11 12]));
+        a.daySummary.infoSmallNP{m,d} = sum(ismember(outcomes,[5 14]))/sum(ismember(outcomes,[4 5 13 14]));
+        a.daySummary.randBigNP{m,d} = sum(ismember(outcomes,[7 18]))/sum(ismember(outcomes,[6 7 17 18]));
+        a.daySummary.randSmallNP{m,d} = sum(ismember(outcomes,[9 20]))/sum(ismember(outcomes,[8 9 19 20]));
     end
 end
 
