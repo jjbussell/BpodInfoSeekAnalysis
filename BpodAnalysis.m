@@ -348,6 +348,17 @@ a.randCorrTrials = a.info == 0 & a.correct == 1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% LEAVING TIMEOUT
+
+a.timeoutGrace(:,1) = sum(~isnan(a.TimeoutGraceLeft),2)/2;
+a.timeoutGrace(:,2) = sum(~isnan(a.TimeoutGraceRight),2)/2;
+a.timeout = ~isnan(a.LeavingTimeout(:,1));
+for t = 1:a.trialCt
+    if ~isempty(a.trialSettings(t).Timeout)
+a.timeoutParam(t,1) = a.trialSettings(t).Timeout;
+    end
+end
+
 %% ERRORS
 
 a.centerEntryCount = sum(~isnan(a.CenterOdor),2)/2;
@@ -375,10 +386,6 @@ a.randChoiceCorr = ismember(a.outcome,[6 7]);
 a.choiceCorrTypeNames = {'InfoForced','RandForced','InfoChoice',...
     'RandChoice'};
 a.choiceTypeCtsCorr = [sum(a.infoForcedCorr) sum(a.randForcedCorr) sum(a.infoChoiceCorr) sum(a.randChoiceCorr)];
-
-a.timeoutGrace(:,1) = sum(~isnan(a.TimeoutGraceLeft),2)/2;
-a.timeoutGrace(:,2) = sum(~isnan(a.TimeoutGraceRight),2)/2;
-a.timeout = ~isnan(a.LeavingTimeout(:,1));
 
 % NOT PRESENT
 
