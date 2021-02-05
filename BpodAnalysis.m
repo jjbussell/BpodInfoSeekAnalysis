@@ -419,7 +419,7 @@ for m = 1:a.mouseCt
     % info choice small
     a.incomplete(m,2) =  sum(mouseOutcomes == 5)/sum(ismember(mouseOutcomes,[4 5]));
     % rand choice big
-    a.incomplete(m,3) = sum(mouseOutcomes == 7))/sum(ismember(mouseOutcomes, [6 7]));
+    a.incomplete(m,3) = sum(mouseOutcomes == 7)/sum(ismember(mouseOutcomes, [6 7]));
     % rand choice small
     a.incomplete(m,4) =  sum(mouseOutcomes == 9)/sum(ismember(mouseOutcomes,[8 9]));    
     % info big
@@ -1087,7 +1087,7 @@ save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a','-v7.3');
 
 
 
-
+gmail;
 
 
 
