@@ -335,12 +335,12 @@ randSmall = [8,9,19,20];
 a.infoBig = ismember(a.outcome,infoBig);
 a.infoSmall = ismember(a.outcome,infoSmall);
 a.randBig = ismember(a.outcome,randBig);
-a.randSmall = ismember(a.outcome,randSmall);;
+a.randSmall = ismember(a.outcome,randSmall);
 
 a.typeNames = {'Info Water','Info None','Rand Water','Rand None'};
 a.typeSizes = [sum(a.infoBig) sum(a.infoSmall) sum(a.randBig) sum(a.randSmall)];
 
-a.choiceCorrTrials = a.trialType == 1 & a.correct == 1;
+a.choiceCorrTrials = a.trialType == 1 & a.correct == 1 & a.trialTypes == 5;
 a.forcedCorrTrials = a.trialType ~= 1 & a.correct == 1;
 a.infoCorrTrials = a.info == 1 & a.correct == 1;
 a.randCorrTrials = a.info == 0 & a.correct == 1;
@@ -546,7 +546,8 @@ for m = 1:a.mouseCt
         a.daySummary.infoSmallNP{m,d} = sum(ismember(outcomes,[5 14]))/sum(ismember(outcomes,[4 5 13 14]));
         a.daySummary.randBigNP{m,d} = sum(ismember(outcomes,[7 18]))/sum(ismember(outcomes,[6 7 17 18]));
         a.daySummary.randSmallNP{m,d} = sum(ismember(outcomes,[9 20]))/sum(ismember(outcomes,[8 9 19 20]));
-        a.daySummary.leavingIDX{m,d} = sum(ismember(outcomes,[5 14]))/sum(ismember(outcomes,[5 14 9 20]));
+        a.daySummary.leavingIDX{m,d} = sum(ismember(outcomes,[5 14]))/sum(ismember(outcomes,[5 14 9 20])); % percent of small leaving that is info 1=allinfo
+        a.daySummary.leavingPercentIDX{m,d} = a.daySummary.infoSmallNP{m,d}/(a.daySummary.infoSmallNP{m,d} + a.daySummary.randSmallNP{m,d}); % info leaving relative to info + rand leaving. 1=allinfo
     end
 end
 
@@ -747,7 +748,7 @@ if ~isempty(a.choiceMice)
     a.meanChoice = a.meanChoice(a.meanChoice(:,3)>0,:);
     a.choiceCI = a.choiceCI(a.choiceCI(:,1)>0,:);
    
-    allChoices = a.choiceCorr(a.choiceCorrTrials & a.reverse == 1);
+    allChoices = a.choiceCorr(a.choiceCorrTrials & a.reverse == 1); % fix this
     [a.overallPref,a.overallCI] = binofit(sum(allChoices == 1),numel(allChoices));
     clear allChoices;
 end
