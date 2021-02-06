@@ -383,8 +383,8 @@ end
 
 %% NOT PRESENT IN PORT OVERALL
 
-for mm = 1:numel(a.currentMiceNums)
-    m=a.currentMiceNums(mm);
+for mm = 1:numel(a.currentMice)
+    m=a.currentMice(mm);
 % for m = 1:a.mouseCt
     figure();
     fig = gcf;
@@ -411,8 +411,8 @@ end
 %% TIMEOUT/LEAVING SUMMARY BY MOUSE
 
 m=4;
-for mm = 1:numel(a.currentMice)
-    m=a.currentMice(mm);
+for mm = 1:numel(a.timeoutMice)
+    m=a.timeoutMice(mm);
 % for m = 1:a.mouseCt
 
     figure();
@@ -484,7 +484,7 @@ for mm = 1:numel(a.currentMice)
     ax = nsubplot(3,2,2,2);
     ax.FontSize = 8;
     ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
-%     ax.YLim = [0 25];
+    ax.YLim = [0 80];
     plot(cell2mat(a.daySummary.rewardRateInfoForced(m,:)),'Color',purple,'LineWidth',1);
     plot(cell2mat(a.daySummary.rewardRateRandForced(m,:)),'Color',orange,'LineWidth',1);
     plot(cell2mat(a.daySummary.rewardRateChoice(m,:)),'Color',[0.5 0.5 0.5],'LineWidth',1);

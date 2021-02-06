@@ -298,9 +298,6 @@ a.reverseMiceList  = a.mouseList(a.reverseMice);
 
 a.imagingMice = zeros(a.mouseCt,1);
 
-a.timeoutMiceList = unique(a.mouse(a.timeoutParam>0&a.trialTypes>4)); % do >3 to include 370/for future
-a.timeoutMice = find(ismember(a.mouseList,a.timeoutMiceList));
-
 %% REACTION TIME AND TRIAL LENGTH
 
 % IN SECONDS
@@ -365,6 +362,10 @@ for t = 1:a.trialCt
         a.timeoutParam(t,1) = 0;
     end
 end
+
+a.timeoutMiceList = unique(a.mouse(a.timeoutParam>0&a.trialTypes>4)); % do >3 to include 370/for future
+a.timeoutMice = find(ismember(a.mouseList,a.timeoutMiceList));
+
 
 %% ERRORS
 
