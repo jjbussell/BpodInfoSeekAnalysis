@@ -198,9 +198,9 @@ for mm = 1:numel(a.currentMice)
     plot(cell2mat(a.daySummary.randIncorr(m,:)),'Color',orange,'LineWidth',1);
     plot(cell2mat(a.daySummary.choiceIncorr(m,:)),'Color',[0.5 0.5 0.5],'LineWidth',1);
     plot(1:a.mouseDayCt(m),ones(1,a.mouseDayCt(m))*0.25,'Color','r','LineWidth',1,'LineStyle','--');
-%     for r = 1:numel(cell2mat(a.reverseDay(m,:)))
-%         plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
-%     end
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
     ylabel('Error rate');
 %     xlabel('Day');
     leg = legend(ax,'Info','No Info','Choice','Location','southoutside','Orientation','horizontal');
@@ -320,71 +320,72 @@ end
 
 
 %% PORT PROBABILITY
-% 
-% bins = a.bins;
-% 
-% for m = 1:a.mouseCt
-%     figure();
-%     fig = gcf;
-%     fig.PaperUnits = 'inches';
-%     fig.PaperPosition = [0.5 0.5 10 7];
-%     set(fig,'renderer','painters');
-%     set(fig,'PaperOrientation','portrait');
-%     
-%     ax = nsubplot(3,1,1,1);
-%     title([a.mouseList(m) ' Probability in port by trial type']);
-%     ax.FontSize = 8;
-%     ylabel('CENTER port');
-%     plot(bins,mean(a.Port2(a.trialType==1 & a.mice(:,m)==1,:)),'Color',grey,'LineWidth',2);
-%     plot(bins,mean(a.Port2(a.trialType==2 & a.mice(:,m)==1,:)),'Color',purple,'LineWidth',2);
-%     plot(bins,mean(a.Port2(a.trialType==3 & a.mice(:,m)==1,:)),'Color',orange,'LineWidth',2);    
-%     ax.YTick = [0 0.25 0.50 0.75 1];
-%     ax.YLim = [-0.1 1.1];
-% %     xlabel('Time relative to go cue (s)');
-%     
-%     ax = nsubplot(3,1,2,1);
-%     ax.FontSize = 8;
-%     ylabel('INFO port');
-%     plot(bins,mean(a.infoPort(a.infoBig==1 & a.mice(:,m)==1,:)),'Color','g','LineWidth',2);
-%     plot(bins,mean(a.infoPort(a.infoSmall==1 & a.mice(:,m)==1,:)),'Color','m','LineWidth',2); 
-%     plot(bins,mean(a.infoPort(a.randBig==1 & a.mice(:,m)==1,:)),'Color','b','LineWidth',2);
-%     plot(bins,mean(a.infoPort(a.randSmall==1 & a.mice(:,m)==1,:)),'Color','c','LineWidth',2);    
-%     ax.YTick = [0 0.25 0.50 0.75 1];
-%     ax.YLim = [-0.1 1.1];
-% %     xlabel('Time relative to go cue (s)');
-% 
-%     ax = nsubplot(3,1,3,1);
-%     ax.FontSize = 8;
-%     ylabel('NO INFO port');
-%     plot(bins,mean(a.randPort(a.infoBig==1 & a.mice(:,m)==1,:)),'Color','g','LineWidth',2);
-%     plot(bins,mean(a.randPort(a.infoSmall==1 & a.mice(:,m)==1,:)),'Color','m','LineWidth',2); 
-%     plot(bins,mean(a.randPort(a.randBig==1 & a.mice(:,m)==1,:)),'Color','b','LineWidth',2);
-%     plot(bins,mean(a.randPort(a.randSmall==1 & a.mice(:,m)==1,:)),'Color','c','LineWidth',2);    
-%     ax.YTick = [0 0.25 0.50 0.75 1];
-%     ax.YLim = [-0.1 1.1];
+
+bins = a.bins;
+
+for m = 1:a.mouseCt
+    figure();
+    fig = gcf;
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0.5 0.5 10 7];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','landscape');
+    
+    ax = nsubplot(3,1,1,1);
+    title([a.mouseList(m) ' Probability in port by trial type']);
+    ax.FontSize = 8;
+    ylabel('CENTER port');
+    plot(bins,mean(a.Port2(a.trialType==1 & a.mice(:,m)==1,:)),'Color',grey,'LineWidth',2);
+    plot(bins,mean(a.Port2(a.trialType==2 & a.mice(:,m)==1,:)),'Color',purple,'LineWidth',2);
+    plot(bins,mean(a.Port2(a.trialType==3 & a.mice(:,m)==1,:)),'Color',orange,'LineWidth',2);    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
 %     xlabel('Time relative to go cue (s)');
-%     
-%     ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
-%     h_for_legend=[];
-%     hold on;
-%     for i = 1:7
-%         h_for_legend(end+1) = plot(ha,0,0, 'color',CCtype(i,:),'linewidth',2);
-%     end
-%     hold off;
-% 
-%     leg = legend(h_for_legend,a.typeLabels,'Location','south','Orientation','horizontal');
-%     legend('boxoff');
-% %     text(0.51,0.98,[a.mouseList{m} ' Choice of Side'],'FontSize',14,'FontWeight','bold','HorizontalAlignment','center');        
-%       
-%     saveas(fig,fullfile(pathname,['portdwell' a.mouseList{m}]),'pdf');
-% end
+    
+    ax = nsubplot(3,1,2,1);
+    ax.FontSize = 8;
+    ylabel('INFO port');
+    plot(bins,mean(a.infoPort(a.infoBig==1 & a.mice(:,m)==1,:)),'Color','g','LineWidth',2);
+    plot(bins,mean(a.infoPort(a.infoSmall==1 & a.mice(:,m)==1,:)),'Color','m','LineWidth',2); 
+    plot(bins,mean(a.infoPort(a.randBig==1 & a.mice(:,m)==1,:)),'Color','b','LineWidth',2);
+    plot(bins,mean(a.infoPort(a.randSmall==1 & a.mice(:,m)==1,:)),'Color','c','LineWidth',2);    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+%     xlabel('Time relative to go cue (s)');
+
+    ax = nsubplot(3,1,3,1);
+    ax.FontSize = 8;
+    ylabel('NO INFO port');
+    plot(bins,mean(a.randPort(a.infoBig==1 & a.mice(:,m)==1,:)),'Color','g','LineWidth',2);
+    plot(bins,mean(a.randPort(a.infoSmall==1 & a.mice(:,m)==1,:)),'Color','m','LineWidth',2); 
+    plot(bins,mean(a.randPort(a.randBig==1 & a.mice(:,m)==1,:)),'Color','b','LineWidth',2);
+    plot(bins,mean(a.randPort(a.randSmall==1 & a.mice(:,m)==1,:)),'Color','c','LineWidth',2);    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+    xlabel('Time relative to go cue (s)');
+    
+    ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
+    h_for_legend=[];
+    hold on;
+    for i = 1:7
+        h_for_legend(end+1) = plot(ha,0,0, 'color',CCtype(i,:),'linewidth',2);
+    end
+    hold off;
+
+    leg = legend(h_for_legend,a.typeLabels,'Location','south','Orientation','horizontal');
+    legend('boxoff');
+%     text(0.51,0.98,[a.mouseList{m} ' Choice of Side'],'FontSize',14,'FontWeight','bold','HorizontalAlignment','center');        
+      
+    saveas(fig,fullfile(pathname,['portdwell' a.mouseList{m}]),'pdf');
+    close;
+end
 
 
 %% NOT PRESENT IN PORT OVERALL
 
-% for mm = 1:numel(a.currentMiceNums)
-%     m=a.currentMiceNums(mm);
-for m = 1:a.mouseCt
+for mm = 1:numel(a.currentMiceNums)
+    m=a.currentMiceNums(mm);
+% for m = 1:a.mouseCt
     figure();
     fig = gcf;
     fig.PaperUnits = 'inches';
@@ -404,6 +405,141 @@ for m = 1:a.mouseCt
     set(gca,'XTickLabel',a.choiceLabels,'XTick',[1:8]);
     
     saveas(fig,fullfile(pathname,['notPresent' a.mouseList{m}]),'pdf');
+end
+
+
+%% TIMEOUT/LEAVING SUMMARY BY MOUSE
+
+m=4;
+for mm = 1:numel(a.currentMice)
+    m=a.currentMice(mm);
+% for m = 1:a.mouseCt
+
+    figure();
+    
+    fig = gcf;
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0 0 11 8.5];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','landscape');
+
+    ax = nsubplot(3,2,1,1);
+    title(a.mouseList(m));
+    ax.FontSize = 8;
+    ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
+%     ax.YLim = [0 1];
+    plot(cell2mat(a.daySummary.maxDelay(m,:)),'Color','k','LineWidth',1);
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
+    ylabel({'Delay', 'to outcome (s)'});
+    xlabel('Day');    
+    hold off;
+    
+    ax = nsubplot(3,2,2,1);
+    ax.FontSize = 8;
+    ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
+%     ax.YLim = [0 1];
+    plot(cell2mat(a.daySummary.maxTimeout(m,:)),'Color','k','LineWidth',1);
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
+    ylabel({'Timeout', 'for leaving (s)'});
+    xlabel('Day');    
+    hold off;
+    
+    ax = nsubplot(3,2,3,1);
+    ax.FontSize = 8;
+    ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
+    ax.XLim = [0 max(cell2mat(a.daySummary.day(m,:)))];
+    ax.YLim = [0 1];
+    plot(cell2mat(a.daySummary.infoBigNP(m,:)),'Color','g','LineWidth',1);
+    plot(cell2mat(a.daySummary.infoSmallNP(m,:)),'Color','m','LineWidth',1);    
+    plot(cell2mat(a.daySummary.randBigNP(m,:)),'Color','c','LineWidth',1);
+    plot(cell2mat(a.daySummary.randSmallNP(m,:)),'Color','b','LineWidth',1);
+    plot(1:a.mouseDayCt(m),ones(1,a.mouseDayCt(m))*0.25,'Color','r','LineWidth',1,'LineStyle','--');    
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
+    ylabel({'Percent trials not present', 'at outcome (s)'});
+    xlabel('Day');    
+    leg = legend(ax,['Info' newline '-Rew'],['Info' newline '-No Rew'],['No Info' newline '-Rew'],['No Info' newline '-No Rew'],'Location','southoutside','Orientation','horizontal');
+    leg.Box = 'off';
+    leg.FontWeight = 'bold';
+    hold off;    
+
+    ax = nsubplot(3,2,1,2);
+    ax.FontSize = 8;
+    title(a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')});    
+    ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
+%     ax.YLim = [0 1];
+    plot(cell2mat(a.daySummary.timeoutTime(m,:)),'Color','k','LineWidth',1);
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
+    ylabel({'Time in', 'timeout (s)'});
+    xlabel('Day');    
+    hold off;      
+    
+    ax = nsubplot(3,2,2,2);
+    ax.FontSize = 8;
+    ax.XTick = [0:5:max(cell2mat(a.daySummary.day(m,:)))];
+%     ax.YLim = [0 25];
+    plot(cell2mat(a.daySummary.rewardRateInfoForced(m,:)),'Color',purple,'LineWidth',1);
+    plot(cell2mat(a.daySummary.rewardRateRandForced(m,:)),'Color',orange,'LineWidth',1);
+    plot(cell2mat(a.daySummary.rewardRateChoice(m,:)),'Color',[0.5 0.5 0.5],'LineWidth',1);
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',1);
+    end
+    ylabel({'Reward', 'Rate (uL/min)'});
+    xlabel('Day');    
+    leg = legend(ax,'Info','No Info','Choice','Location','southoutside','Orientation','horizontal');
+    leg.Box = 'off';
+    leg.FontWeight = 'bold';
+    hold off;
+    
+    ax = nsubplot(3,2,3,2);
+    title(a.mouseList(m));
+    ax.FontSize = 8;
+    if sum(a.mouseTrialTypes{m}==5) > 0
+    ax.XTick = [0:5:a.mouseDayCt(m)];    
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+    plot(0,0,'Marker','none');
+    plot(1:a.mouseDayCt(m),[cell2mat(a.daySummary.percentInfo(m,:))],'Color',[.5 .5 .5],'LineWidth',2,'Marker','o','MarkerSize',3);
+    plot([-10000000 1000000],[0.5 0.5],'k','xliminclude','off','color',[0.8 0.8 0.8],'LineWidth',1);
+    for r = 1:numel(cell2mat(a.reverseDay(m,:)))
+        plot([a.reverseDay{m,r}-0.5 a.reverseDay{m,r}-0.5],[-10000000 1000000],'k','yliminclude','off','xliminclude','off','LineWidth',2);
+    end
+    ylabel({'Info choice', 'probability'}); %ylabel({'line1', 'line2','line3'},)
+    xlabel('Day');
+    hold off;
+    else
+    %         if a.mouseDayCt(m)>10
+            ax.XTick = [0:5:a.mouseDayCt(m)];
+    %         end
+    %         ax.XLim = [1 a.mouseDayCt(m)]; 
+        ax.YLim = [0 300];
+        xlabel('Day')
+        plot(1:a.mouseDayCt(m),cell2mat(a.daySummary.totalCorrectTrials(m,:)),'Color','k','LineWidth',1,'Marker','o','MarkerFaceColor','k','MarkerSize',2);
+        for d = 1:a.mouseDayCt(m)
+    %             text(d,275,num2str(a.daySummary.totalWater{m,d}),'Fontsize',5,'Color','r');
+            text(d,275,num2str(a.daySummary.maxDelay{m,d}),'Fontsize',5,'Color','r');
+            if d == a.mouseDayCt(m)
+    %                text(d+.2,275,'Total Water','Fontsize',7,'Color','r');
+               text(d+.3,275,'Delay','Fontsize',7,'Color','r');
+            end
+        end          
+        ylabel('TotalCorrectTrials');
+    %         ax.YLim = [0 100];
+    %         ax.YTick = [0 25 50 75 100];
+    %     ax.YColor = 'k';
+        hold off;
+    end    
+   
+    saveas(fig,fullfile(pathname,['LeavingSummary' a.mouseList{m}]),'pdf');
+%     close(fig);
+    
 end
 
 
@@ -1062,7 +1198,7 @@ end
     errorbar(3,nanmean(a.rewardRate(:,2)),sem(a.rewardRate(:,2)),'Color','k','LineWidth',2,'CapSize',100);
     xticks([1 3]);
     xticklabels({'Info','No Info'});
-    ylabel('Reward Rate across all preference days');
+    ylabel('Reward Rate across all training days');
     saveas(fig,fullfile(pathname,'RewardRateAllDays'),'pdf');    
 
 
