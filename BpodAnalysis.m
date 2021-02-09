@@ -197,26 +197,18 @@ for m = 1:a.mouseCt
     mouseFile = a.file(ok);
     mouseParams = a.rewardParams(ok,:);
     if sum(mouseTrialTypes == 5) > 0 % if mouse has done choices
-        a.choiceMice(m,1) = 1;
-%         mouseFileCt(m,1) = sum(a.fileMouse == m);
-%         mouseFileTypes = a.fileTrialTypes(a.fileMouse == m);
-%         mouseFilesIdx = find(a.fileMouse == m);
-%         mouseFileDays = a.fileDay(a.fileMouse == m);    
-%         [sortedMouseFileDays,mouseDateIdx] = sort(mouseFileDays); % day for each of that mouse's files
-%         sortedMouseFiles=mouseFilesIdx(mouseDateIdx);
-
-        mouseDays = a.mouseDay(ok);
+%         mouseDays = a.mouseDay(ok);
         [sortedMouseDays, a.mouseDayIdx{1,m}] = sort(a.mouseDay(ok));
         mouseDayIdx = a.mouseDayIdx{1,m}; % idx into mouse's unsorted trials to sort by day
         mouseTrialsIdx = mouseTrials(mouseDayIdx); % idx into all trials of mouse's sorted trials
-        a.mouseTrialsIdx{m} = mouseTrialsIdx;
+%         a.mouseTrialsIdx{m} = mouseTrialsIdx;
         sortedMouseTrialTypes = mouseTrialTypes(mouseDayIdx);
-        sortedMouseFile = mouseFile(mouseDayIdx);
+%         sortedMouseFile = mouseFile(mouseDayIdx);
         firstChoiceIdx = find(sortedMouseTrialTypes == 5,1,'First'); % idx into sorted -- for mouseTrialsIdx b/c it's sorted
         lastChoiceIdx = find(sortedMouseTrialTypes == 5,1,'Last');
-        firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
-        firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
-        a.firstChoiceDay(1,m) = sortedMouseDays(firstChoiceIdx);
+%         firstChoice = mouseDayIdx(firstChoiceIdx); % idx into unsorted mouse's trials
+%         firstChoiceTrial = mouseTrialsIdx(firstChoiceIdx); % in all trials, first choice trial for this mouse
+        a.firstChoiceDay(m,1) = sortedMouseDays(firstChoiceIdx);
        
         mouseInfoside = a.infoSide(ok);
         sortedMouseInfoside = mouseInfoside(mouseDayIdx);
@@ -233,17 +225,14 @@ for m = 1:a.mouseCt
                 lastRevTrial = numel(mouseTrials);
             end
             reversesIdx = find(mouseInfoSideDiff~=0); % idx of first reverse trial in trials sorted by day 
-            a.reversesIdx{m} = reversesIdx;
-            reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials
-            
+%             a.reversesIdx{m} = reversesIdx;
+            reverses = mouseDayIdx(reversesIdx); % idx in unsorted mouse trials            
             for r = 1:numel(reverses)
                a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse 
             end
             a.lastParamDay(m,1) = sortedMouseDays(lastRevTrial);
             if numel(reverses)>1
                 for r = 1:numel(reverses)-1
-    %                 a.reverseDay{m,r} = mouseDays(reverses(r)+1); % last day before reverse
-    %                 a.reverseDay{m,r} = sortedMouseDays(reversesIdx(r))+1; % day of reverse
                     if r==1
                         a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
                         a.reverse(mouseTrialsIdx(reversesIdx(1)+1:reversesIdx(2))) = -1;
@@ -259,19 +248,6 @@ for m = 1:a.mouseCt
                 a.reverse(mouseTrialsIdx(firstChoiceIdx:reversesIdx(1))) = 1;
                 a.reverse(mouseTrialsIdx(reversesIdx(1)+1:lastRevTrial)) = -1;
             end
-            
-%             % REACTION AND LICKS REL TO CURR INFO SIDE4r
-%             okMouseTrials = zeros(numel(a.file),1);
-%             okMouseTrials(mouseTrialsIdx);
-%             ok1 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == 1;
-%             ok1Idx = find(ok1);
-%             okInfoPreRev = find(ok1==1,300,'last');
-%             ok2 = a.mice(:,m) == 1 & a.trialType == 3 & a.correct == 1 & a.reverse == 1;
-%             okRandPreRev = find(ok2==1,300,'last');
-%             ok3 = a.mice(:,m) == 1 & a.trialType == 2 & a.correct == 1 & a.reverse == -1;
-%             okInfoPostRev = find(ok3==1,300,'last');
-%             ok4 = a.mice(:,m) == 1 & & a.trialType == 3 & a.correct == 1 & a.reverse == -1;
-%             okRandPostRev = find(ok4==1,300,'last');
         else
             a.reverse(mouseTrialsIdx(firstChoiceIdx:lastChoiceIdx)) = 1;
         end
@@ -365,7 +341,6 @@ end
 
 a.timeoutMiceList = unique(a.mouse(a.timeoutParam>0&a.trialTypes>4)); % do >3 to include 370/for future
 a.timeoutMice = find(ismember(a.mouseList,a.timeoutMiceList));
-
 
 %% ERRORS
 
