@@ -155,8 +155,11 @@ a.info((a.trialType == 3) & ~isnan(a.incorrectChoice)) = 1;
 
 % initside = a.initinfoside_info(a.correct==1);
 % a.choice_all = a.info(a.correct==1); % choice relative to initial info side, all trials
+
+%choice_all includes info-ness of incorrect choices, NaN only on no choice
 a.choice_all = a.info;
-reverseFlag = a.initinfoside_info == -1 & a.correct==1;
+% reverseFlag = a.initinfoside_info == -1 & a.correct==1;
+reverseFlag = a.initinfoside_info == -1 & isnan(a.noChoice);
 a.choice_all(reverseFlag) = ~a.choice_all(reverseFlag);
 
 a.choiceTrials = a.trialTypes==5 & a.trialType == 1;
@@ -655,7 +658,7 @@ later opto, imaging, values, licking!!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% MEAN CHOICES / STATS AND CHOICE RANGES - FIX
+%% MEAN CHOICES / STATS AND CHOICE RANGES
 
 trialsToCount = 300;
 
@@ -1061,37 +1064,10 @@ save('infoSeekBpodDataAnalyzed.mat','a','-v7.3');
 
 save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a','-v7.3');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
 gmail;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
