@@ -143,6 +143,12 @@ a.choice(~isnan(a.noChoice)) = a.noChoice(~isnan(a.noChoice));
 
 %% INFO (CHOICE OF INFO) includes incorrect but not nochoice
 
+% a.info is choice of current info side on all trials with a choice
+% (including incorrect)
+
+% a.choice_all is choice of initially info side on all trials w a choice
+% (including incorrect)
+
 % This is a.choiceCorr (but includes incorrect)
 
 a.info = NaN(a.trialCt,1);
@@ -304,7 +310,7 @@ a.randChoice = a.trialType == 1 & a.correct == 1 & a.info == 0;
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ALL CORRECT TRIALS (INCLUDES NOT PRESENT)
+% ALL CORRECT TRIALS (INCLUDES NOT PRESENT BUT NOT NO CHOICE OR INCORRECT)
 
 infoBig = [2,3,11,12];
 infoSmall = [4,5,13,14];
@@ -480,7 +486,7 @@ for m = 1:a.mouseCt
         a.daySummary.trialCt{m,d} = sum(okAll);
         a.daySummary.totalCorrectTrials{m,d} = sum(a.correct(okAll));
         a.daySummary.totalWater{m,d} = sum(a.reward(okAll));
-        a.daySummary.percentInfo{m,d} = nanmean(a.infoCorrTrials(ok & a.trialType == 1 & a.trialTypes == 5));
+        a.daySummary.percentInfo{m,d} = nanmean(a.info(ok & a.trialType == 1 & a.trialTypes == 5));
         a.daySummary.percentIIS{m,d} = nanmean(a.choice_all(ok & a.trialType == 1 & a.trialTypes == 5));
                 
         a.daySummary.rxnInfoForced{m,d} = nanmean(a.rxn(a.infoForcedCorr & ok));
@@ -679,7 +685,7 @@ if ~isempty(a.choiceMice)
        oksorted = okidx(sortidx);
        
        % that mouse's choice trials
-       choicesIIS = a.choice_all(ok); % includes choice training??
+       choicesIIS = a.choice_all(ok);
        choicesIIS = choicesIIS(sortidx);
        choices = a.info(ok);
        choices = choices(sortidx);
@@ -703,8 +709,18 @@ if ~isempty(a.choiceMice)
              [a.pref(m,7),a.pref2RevCI(m,1:2)] = binofit(sum(choicesIIS(reverse2Trials)==1),numel(choicesIIS(reverse2Trials)));
              [a.pref(m,8),a.pref2RevCI(m,3:4)] = binofit(sum(choices(reverse2Trials)==1),numel(choices(reverse2Trials)));
          end
+         
+       % FOR ALL REVERSES
+       x = [a.initinfoside_side(ok & a.reverse~=0) a.initinfoside_info(ok & a.reverse~=0)];
+       y = a.choice_all(ok & a.reverse~=0);
+       [~,~,a.stats(m)] = glmfit(x,y,'binomial','link','logit','constant','off');
+       a.beta(m,:) = a.stats(m).beta;
+       a.betaP(m,:) = a.stats(m).p;
+       a.betaSE(m,:) = a.stats(m).se;         
        end
 
+       
+       % For all, not just first 300, trials
        choicePreRev = a.choice_all(ok & a.reverse == 1);
        [a.meanChoice(m,1),a.choiceCI(m,1:2)] = binofit(sum(choicePreRev==1),numel(choicePreRev));
        
@@ -712,16 +728,7 @@ if ~isempty(a.choiceMice)
        if ismember(m,a.reverseMice)
            choicePostRev = a.choice_all(ok & a.reverse==-1);
            [a.meanChoice(m,2),a.choiceRevCI(m,1:2)] = binofit(sum(choicePostRev==1),numel(choicePostRev));
-           
-           % FOR ALL REVERSES
-           x = [a.initinfoside_side(ok & a.reverse~=0) a.initinfoside_info(ok & a.reverse~=0)];
-           y = a.choice_all(ok & a.reverse~=0);
-           [~,~,a.stats(m)] = glmfit(x,y,'binomial','link','logit','constant','off');
-           a.beta(m,:) = a.stats(m).beta;
-           a.betaP(m,:) = a.stats(m).p;
-           a.betaSE(m,:) = a.stats(m).se;
        end
-       
        a.meanChoice(m,3) = m;
  
    end
