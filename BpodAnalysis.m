@@ -155,7 +155,7 @@ a.info((a.trialType == 3) & ~isnan(a.incorrectChoice)) = 1;
 
 % initside = a.initinfoside_info(a.correct==1);
 % a.choice_all = a.info(a.correct==1); % choice relative to initial info side, all trials
-a.choice_all = a.info; 
+a.choice_all = a.info;
 reverseFlag = a.initinfoside_info == -1 & a.correct==1;
 a.choice_all(reverseFlag) = ~a.choice_all(reverseFlag);
 
