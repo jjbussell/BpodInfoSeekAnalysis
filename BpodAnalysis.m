@@ -519,7 +519,8 @@ for m = 1:a.mouseCt
         a.daySummary.rewardRateRandForced{m,d} = nansum(a.reward(a.randForced == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.randForced == 1 & okAll == 1))/60);
         a.daySummary.rewardRateChoice{m,d} = nansum(a.reward(a.trialType == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.trialType == 1 & okAll == 1))/60);
         a.daySummary.rewardRateInfo{m,d} = nansum(a.reward(a.info == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 1 & okAll == 1))/60);
-        a.daySummary.rewardRateRand{m,d} = nansum(a.reward(a.info == 0 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 0 & okAll == 1))/60);        
+        a.daySummary.rewardRateRand{m,d} = nansum(a.reward(a.info == 0 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 0 & okAll == 1))/60);
+        a.daySummary.rewardRateIdx{m,d} = a.daySummary.rewardRateInfo{m,d}/a.daySummary.rewardRateRand{m,d};
 
         outcomes = a.outcome(okAll ==1);
         a.daySummary.infoCorr{m,d} = sum(ismember(outcomes,a.infoCorrCodes))/(sum(ismember(outcomes,a.infoCorrCodes))+sum(ismember(outcomes,a.infoIncorrCodes)));
@@ -664,7 +665,9 @@ later opto, imaging, values, licking!!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% MEAN CHOICES / STATS AND CHOICE RANGES
+%% PREFERENCE
+
+% MEAN CHOICES / STATS AND CHOICE RANGES
 
 trialsToCount = 300;
 
@@ -720,7 +723,7 @@ if ~isempty(a.choiceMice)
        end
 
        
-       % For all, not just first 300, trials
+       % For all, not just first 300, trials of choiceIIS
        choicePreRev = a.choice_all(ok & a.reverse == 1);
        [a.meanChoice(m,1),a.choiceCI(m,1:2)] = binofit(sum(choicePreRev==1),numel(choicePreRev));
        
@@ -730,16 +733,28 @@ if ~isempty(a.choiceMice)
            [a.meanChoice(m,2),a.choiceRevCI(m,1:2)] = binofit(sum(choicePostRev==1),numel(choicePostRev));
        end
        a.meanChoice(m,3) = m;
+       
+       [a.choicePreferenceAll(m,1),a.choiceCIAll(m,1:2)] = binofit(sum(a.info(ok)==1),numel(a.info(ok)));
  
    end
 
    % pref(:,1) for up to 300 trials, mean choice for all
     a.meanChoice = a.meanChoice(a.meanChoice(:,3)>0,:);
     a.choiceCI = a.choiceCI(a.choiceCI(:,1)>0,:);
+       
+    allOk = a.trialType == 1 & a.trialTypes == 5 & a.correct == 1;
+   [a.choicePreferenceAllMice,a.choiceCIAllMice] = binofit(sum(a.info(ok)==1),numel(a.info(ok)));
    
-    allChoices = a.choiceCorr(a.choiceCorrTrials & a.reverse == 1); % fix this
+    % Initial preference across mice, not just first 300 trials
+    allChoices = a.choice_all(allOk & a.reverse == 1); % fix this
     [a.overallPref,a.overallCI] = binofit(sum(allChoices == 1),numel(allChoices));
-    clear allChoices;
+    
+    [a.sortedChoice,a.sortIdx] = sortrows(a.meanChoice(~isnan(a.meanChoice(:,1)),:),1);
+    a.sortedMouseList = a.choiceMiceList(a.sortIdx);
+    a.sortedCI = a.choiceCI(a.sortIdx,:);
+    a.icp_all = a.sortedChoice(:,1)*100;    
+    a.overallP = signrank(a.icp_all-50);    
+  
 end
 
 %% OVERALL CHOICES BY SIDE
@@ -757,20 +772,6 @@ if numel(a.reverseMice)>0
  a.overallChoiceP = signrank(a.overallChoicePercent-50);
 end
 
-
-%% SORT BY INFO PREFERENCE
-if sum(a.choiceMice)>0
-    [a.sortedChoice,a.sortIdx] = sortrows(a.meanChoice(~isnan(a.meanChoice(:,1)),:),1);
-    a.sortedMouseList = a.choiceMiceList(a.sortIdx);
-    a.sortedCI = a.choiceCI(a.sortIdx,:);
-    % STATS
-
-    a.icp_all = a.sortedChoice(:,1)*100;    
-%     a.icp_all = a.meanChoice(1:end-1,1)*100;    
-    a.overallP = signrank(a.icp_all-50);
-        
-end
-
 %% TO DO
 %{
 reversalrxn
@@ -785,6 +786,70 @@ rewarddiff
 rxnmean
 %}
 
+%% DAYS AROUND REVERSES
+
+if ~isempty(a.reverseMice)
+    a.reversalDays = NaN(numel(a.reverseMice),4);
+    for m = 1:numel(a.reverseMice)
+        mm=a.reverseMice(m);
+        a.reversalDays(m,1) = a.reverseDay{mm,1}-1; % day prior to 1st reversal
+        if size(cell2mat(a.reverseDay(mm,:)),2) > 1
+            if ~isempty(a.reverseDay{mm,2})
+            a.reversalDays(m,2) = a.reverseDay{mm,2}-1; % day prior to second reversal
+            % last day of second reversal (either r+3/last day or last day before get
+            % ready for values)
+                if ~isempty(a.reverseDay{mm,3})
+                    a.reversalDays(m,3) = a.reverseDay{mm,3}-1; % day prior to third reversal
+                    a.reversalDays(m,4) = a.lastParamDay(mm);
+                else
+                    if a.reverseDay{mm,2}+3 >= a.lastParamDay(mm)
+                        a.reversalDays(m,3) = a.lastParamDay(mm);
+                    else
+                        a.reversalDays(m,3) = a.reverseDay{mm,2}+3;
+                    end
+                end
+            end
+        end
+    end
+end
+
+%% BEHAVIOR ACROSS REVERSALS (PER DAY, PER REVERSAL, PER SIDE). Relative to current info side
+
+% for per reversal and per side, use infoside,a.reverse (unless need to
+% sort and pull first 300 OR want only a single day)
+
+% reward rate, % trials leaving
+
+% for per day, use a.mouseDays/a.mouseDayCt and a.firstChoiceDay,
+% a.reversalDays,a.lastParamDay = max(a.reversalDays?)
+
+% make cell array of relevant days for each mouse and then can just plot
+% these
+% a.choiceDays
+
+if ~isempty(a.reverseMice)
+    for m = 1:numel(a.reverseMice)
+        mm=a.reverseMice(m);
+        a.choiceDays{1,:,m} = a.firstChoiceDay(mm):a.reversalDays(m,1);
+        a.choiceDays{2,:,m} = a.reversalDays(m,1)+1:a.reversalDays(m,2);
+        a.choiceDays{3,:,m} = a.reversalDays(m,2)+1:a.reversalDays(m,3);
+        a.choiceDays{4,:,m} = a.reversalDays(m,3)+1:a.reversalDays(m,4);
+        
+        choiceDays = a.choiceDays(:,:,m);
+        a.allChoiceDays{m,:} = [choiceDays{:}];
+        
+        days = a.allChoiceDays{m,:};
+        days=days(~isnan(days));
+        a.choiceDayPref{m,:} = [a.daySummary.percentInfo{mm,days}];
+        a.choiceDayInfoSmallNP{m,:} = [a.daySummary.infoSmallNP{mm,days}];
+        a.choiceDayleavingPercentIDX{m,:} = [a.daySummary.leavingPercentIDX{mm,days}];
+        a.choiceDayRewardRateInfo{m,:} = [a.daySummary.rewardRateInfo{mm,days}];
+        a.choiceDayRewardRateRand{m,:} = [a.daySummary.rewardRateInfo{mm,days}];
+        a.choiceDayRewardRateIdx{m,:} = [a.daySummary.rewardRateIdx{mm,days}];
+    end
+end
+
+
 %% EARLY LICKS AND REACTION SPEED BY REVERSAL
 
 % NEED TO FINISH
@@ -793,6 +858,8 @@ rxnmean
 
 %%
 % RELATIVE TO CURRENT INFO SIDE
+
+% CHANGE THIS ACROSS ALL REVERSALS
 
 if ~isempty(a.reverseMice)
     for m=1:a.mouseCt  
@@ -851,67 +918,7 @@ if ~isempty(a.reverseMice)
     end
 
 end
-% 
-% %%
-% for m = 1:a.mouseCt
-%     infoBigProb = [];
-%     randBigProb = [];
-%     for d = 1:a.mouseDayCt(m)
-%         infoBigProb(d) = a.daySummary.infoBigProb{m,d};
-%         randBigProb(d) = a.daySummary.randBigProb{m,d};
-%     end
-%     a.infoBigProbs{m,1} = infoBigProb;
-%     a.randBigProbs{m,1} = randBigProb;
-% end
-% 
-%% DAYS AROUND REVERSES
 
-if ~isempty(a.reverseMice)
-
-    a.reversalDays = NaN(numel(a.reverseMice),4);
-
-    for m = 1:numel(a.reverseMice)
-        mm=a.reverseMice(m);
-        a.reversalDays(m,1) = a.reverseDay{mm,1}-1; % day prior to 1st reversal
-        if size(cell2mat(a.reverseDay(mm,:)),2) > 1
-            if ~isempty(a.reverseDay{mm,2})
-            a.reversalDays(m,2) = a.reverseDay{mm,2}-1; % day prior to second reversal
-
-            % last day of second reversal (either r+3/last day or last day before get
-            % ready for values)
-            % use a.lastParamDay for value mice!
-%             if ~ismember(mm,a.valueMice)
-                if ~isempty(a.reverseDay{mm,3})
-                    a.reversalDays(m,3) = a.reverseDay{mm,3}-1; % day prior to third reversal
-                    a.reversalDays(m,4) = a.mouseDayCt(mm); % no? WHAT ABOUT VALUE?!?
-                
-                else
-                
-                    if a.reverseDay{mm,2}+3 >= a.mouseDayCt(mm)
-                        a.reversalDays(m,3) = a.mouseDayCt(mm);
-                    else
-                        a.reversalDays(m,3) = a.reverseDay{mm,2}+3;
-                    end
-                end
-%             else
-%                 mmm = find(a.valueMice == mm);
-%                 mouseValueDays = a.mouseValueDays{mmm,1};
-%                 if ismember(mmm,a.valueMiceInfo)
-%                     mouseProbDays = a.infoBigProbs{mm,1};
-%                 else
-%                     mouseProbDays = a.randBigProbs{mm,1};
-%                 end
-%                 mouseValues = mouseProbDays(mouseValueDays);
-%                 if sum(mouseValues > 25) > 0
-%                     a.reversalDays(m,3) = find(mouseProbDays==25,1,'last');
-%                 else
-%                     a.reversalDays(m,3) = mouseValueDays(1);
-%                 end
-%               end
-            end
-        end
-    end
-end % TAKE THIS OUT WHEN ADD BELOW
 
 %% CHOICE, RXN SPEED, EARLY LICKS, AND REWARD RATE AROUND REVERSALS BY IIS
 

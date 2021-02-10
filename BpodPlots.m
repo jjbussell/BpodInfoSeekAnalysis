@@ -542,6 +542,42 @@ for mm = 1:numel(a.timeoutMice)
     
 end
 
+%% LEAVING AND REWARD RATE VS PREFERENCE BY DAY FOR EACH MOUSE
+
+if ~isempty(a.reverseMice)
+    for m = 1:numel(a.reverseMice)
+        mm=a.reverseMice(m);
+        
+    figure();
+    
+    fig = gcf;
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0 0 11 8.5];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','landscape');        
+        
+    ax = nsubplot(1,2,1,1);
+    ax.FontSize = 8;
+    ax.YLim = [0 1];
+    ax.XLim = [0 1];
+    title(['Reward Rate vs Preference by Day' a.mouseList(mm)]);    
+    scatter(a.choiceDayRewardRateIdx{m,:},a.choiceDayPref{m,:},'filled');
+    ylabel('Information preference');
+    xlabel('Info / Random Reward Rate');
+    
+    ax = nsubplot(1,2,1,2);
+    ax.FontSize = 8;
+    ax.YLim = [0 1];
+    ax.XLim = [0 1];
+    title(['Leaving vs Preference by Day' a.mouseList(mm)]);    
+    scatter(a.choiceDayInfoSmallNP{m,:},a.choiceDayPref{m,:},'filled');
+    ylabel('Information preference');
+    xlabel('Info-NoReward Leaving Port (% trials)');
+    
+    saveas(fig,fullfile(pathname,['PrefbyDayvsRewLeaving' a.mouseList{m}]),'pdf');
+    
+    end
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -575,7 +611,7 @@ if a.choiceMouseCt > 1
     errorbar(a.choiceMouseCt+1,a.overallPref,a.overallPref - a.overallCI(1),a.overallCI(2) - a.overallPref,'LineStyle','none','LineWidth',2,'Color','k');
     plot([-10000000 1000000],[0.5 0.5],'k','yliminclude','off','xliminclude','off');
     text(a.choiceMouseCt+2,a.overallPref,['p = ' num2str(a.overallP)])
-    ylabel('Info side preference');
+    ylabel('Initial info side preference');
     xlabel('Mouse');
     hold off;
     
@@ -835,6 +871,172 @@ title('Initial choice of information vs. faster info reaction');
 hold off;
 
 saveas(fig,fullfile(pathname,'InitPrefbyrxn'),'pdf');
+%     close(fig);
+end
+
+%% PREFERENCE VS LEAVING BY DAY
+
+if ~isempty(a.reverseMice)
+fig = figure();
+fig.PaperUnits = 'inches';
+fig.PaperPosition = [0.5 0.5 10 7];
+set(fig,'renderer','painters');
+set(fig,'PaperOrientation','landscape');
+
+ax = nsubplot(1,1,1,1);
+ax.FontSize = 8;
+% ax.XLim = [0 1];
+% ax.YLim = [0 1];
+hold on;
+
+prefs = [];
+prefsT = [];
+NP = [];
+NPT = [];
+for mm = 1:numel(a.reverseMice)
+    m = a.reverseMice(mm);
+    if ismember(m,a.timeoutMice)
+        prefs = [prefs a.choiceDayPref{mm,:}];
+
+        NP = [NP a.choiceDayRewardRateIdx{mm,:}];      
+
+        scatter(a.choiceDayInfoSmallNP{mm,:},a.choiceDayPref{mm,:},'filled','FaceColor','m');
+    else
+        prefsT = [prefsT a.choiceDayPref{mm,:}];
+        NPT = [NPT a.choiceDayRewardRateIdx{mm,:}];
+        
+        scatter(a.choiceDayInfoSmallNP{mm,:},a.choiceDayPref{mm,:},'filled','FaceColor','c');
+    end
+end
+
+        prefs = prefs(~isnan(prefs));
+                NP = NP(~isnan(NP));
+                NPT=NPT(~isnan(NPT));
+                prefsT=prefsT(~isnan(prefsT));
+
+x=NP;
+y=prefs;
+p = polyfit(x,y,1);
+yfit = polyval(p,x);
+yresid = y - yfit;
+SSresid = sum(yresid.^2);
+SStotal = (length(y)-1) * var(y);
+rsq = 1 - SSresid/SStotal;
+plot(x,yfit,'Color','m');
+
+xT=NPT;
+yT=prefsT;
+pT = polyfit(xT,yT,1);
+yfitT = polyval(pT,xT);
+yresidT = yT - yfitT;
+SSresidT = sum(yresidT.^2);
+SStotalT = (length(yT)-1) * var(yT);
+rsqT = 1 - SSresidT/SStotalT;
+plot(xT,yfitT,'Color','c');
+
+
+ylabel({'P(choose info)'}); %{'Info choice', 'probability'}
+xlabel({'P(NOT present in port on info small)'});
+title('Mean choice of information vs. probability of leaving on low-value info trials, PER SESSION');
+
+hold off;
+
+h_for_legend=[];
+ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
+h_for_legend=[];
+hold on;
+CCtimeout = [1 0 1;0 1 1];
+for i = 1:2
+    h_for_legend(end+1) = plot(ha,0,0, 'color',CCtimeout(i,:),'linewidth',2);
+end
+hold off;
+
+
+leg = legend(h_for_legend,['Mice trained to stay in port'],['Mice Allowed To Leave'],'Location','southoutside','Orientation','horizontal');
+
+saveas(fig,fullfile(pathname,'Prefbyleavingbyday'),'pdf');
+%     close(fig);
+end
+
+%% PREFERENCE VS REWARD RATE INDEX BY DAY
+
+if ~isempty(a.reverseMice)
+fig = figure();
+fig.PaperUnits = 'inches';
+fig.PaperPosition = [0.5 0.5 10 7];
+set(fig,'renderer','painters');
+set(fig,'PaperOrientation','landscape');
+
+ax = nsubplot(1,1,1,1);
+ax.FontSize = 8;
+ax.XLim = [0 2];
+ax.YLim = [0 1];
+hold on;
+
+prefsT = [];
+prefs = [];
+rrT = [];
+rr=[];
+for mm = 1:numel(a.reverseMice)
+    m = a.reverseMice(mm);
+    if ismember(m,a.timeoutMice)
+        prefs = [prefs a.choiceDayPref{mm,:}];
+        rr = [rr a.choiceDayRewardRateIdx{mm,:}];
+%         [fit1, gof1]=fit(rr', prefs','poly1');
+%         plot(fit1,rr,prefs);
+        scatter(rr,prefs,'filled','FaceColor','m');
+    else
+        prefsT = [prefs a.choiceDayPref{mm,:}];
+        rrT = [rr a.choiceDayRewardRateIdx{mm,:}];        
+        scatter(rrT,prefsT,'filled','FaceColor','c');
+    end
+end
+
+x=rr;
+y=prefs;
+p = polyfit(x,y,1);
+yfit = polyval(p,x);
+yresid = y - yfit;
+SSresid = sum(yresid.^2);
+SStotal = (length(y)-1) * var(y);
+rsq = 1 - SSresid/SStotal;
+plot(x,yfit,'Color','m');
+
+xT=rrT;
+yT=prefsT;
+pT = polyfit(xT,yT,1);
+yfitT = polyval(pT,xT);
+yresidT = yT - yfitT;
+SSresidT = sum(yresidT.^2);
+SStotalT = (length(yT)-1) * var(yT);
+rsqT = 1 - SSresidT/SStotalT;
+plot(xT,yfitT,'Color','c');
+
+
+% [fit2, gof2]=fit(rrT', prefsT','poly1');
+% plot(fit1,'LineColor','m');
+% plot(fit2,'LineColor','c');
+
+ylabel({'P(choose info)'}); %{'Info choice', 'probability'}
+xlabel({'Reward Rate Info / Reward Rate No Info'});
+title('Mean choice of information vs. relative info reward rate, PER SESSION');
+
+hold off;
+
+h_for_legend=[];
+ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
+h_for_legend=[];
+hold on;
+CCtimeout = [1 0 1;0 1 1];
+for i = 1:2
+    h_for_legend(end+1) = plot(ha,0,0, 'color',CCtimeout(i,:),'linewidth',2);
+end
+hold off;
+
+
+leg = legend(h_for_legend,['Mice trained to stay in port'],['Mice Allowed To Leave'],'Location','southoutside','Orientation','horizontal');
+
+saveas(fig,fullfile(pathname,'Prefbyrewardratebyday'),'pdf');
 %     close(fig);
 end
 
