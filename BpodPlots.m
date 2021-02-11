@@ -556,25 +556,25 @@ if ~isempty(a.reverseMice)
     set(fig,'renderer','painters');
     set(fig,'PaperOrientation','landscape');        
         
-    ax = nsubplot(1,2,1,1);
+    ax = nsubplot(2,2,1,1);
     ax.FontSize = 8;
     ax.YLim = [0 1];
-    ax.XLim = [0 1];
+%     ax.XLim = [0 2];
     title(['Reward Rate vs Preference by Day' a.mouseList(mm)]);    
     scatter(a.choiceDayRewardRateIdx{m,:},a.choiceDayPref{m,:},'filled');
-    ylabel('Information preference');
-    xlabel('Info / Random Reward Rate');
+    ylabel('P(choose info)');
+    xlabel('Info / No Info Reward Rate');
     
-    ax = nsubplot(1,2,1,2);
+    ax = nsubplot(2,2,1,2);
     ax.FontSize = 8;
     ax.YLim = [0 1];
     ax.XLim = [0 1];
     title(['Leaving vs Preference by Day' a.mouseList(mm)]);    
     scatter(a.choiceDayInfoSmallNP{m,:},a.choiceDayPref{m,:},'filled');
-    ylabel('Information preference');
-    xlabel('Info-NoReward Leaving Port (% trials)');
+    ylabel('P(choose info)');
+    xlabel('P(NOT present in port on info no water)');
     
-    saveas(fig,fullfile(pathname,['PrefbyDayvsRewLeaving' a.mouseList{m}]),'pdf');
+    saveas(fig,fullfile(pathname,['PrefbyDayvsRewLeaving' a.mouseList{mm}]),'pdf');
     
     end
 end

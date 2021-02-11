@@ -206,6 +206,7 @@ for m = 1:a.mouseCt
     mouseFile = a.file(ok);
     mouseParams = a.rewardParams(ok,:);
     if sum(mouseTrialTypes == 5) > 0 % if mouse has done choices
+        a.choiceMice(m,1) = 1;
 %         mouseDays = a.mouseDay(ok);
         [sortedMouseDays, a.mouseDayIdx{1,m}] = sort(a.mouseDay(ok));
         mouseDayIdx = a.mouseDayIdx{1,m}; % idx into mouse's unsorted trials to sort by day
