@@ -407,6 +407,30 @@ for mm = 1:numel(a.currentMice)
     saveas(fig,fullfile(pathname,['notPresent' a.mouseList{m}]),'pdf');
 end
 
+%%
+    figure();
+    fig = gcf;
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0.5 0.5 10 7];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','landscape');
+
+    ax = nsubplot(1,1,1,1);
+    title('Not Present in Port at Outcome - timeout mice');
+    ax.FontSize = 8;
+    ylabel('% trials not present in reward port at outcome');
+
+    ax.YTick = [0 0.25 0.50 0.75 1];
+    ax.YLim = [-0.1 1.1];
+
+    bar(nanmean(a.incomplete(a.timeoutMice,:)),'FaceColor','none','EdgeColor','k');
+    hold on;
+    plot(a.incomplete(a.timeoutMice,:)','Linestyle','none','Marker','o');
+    set(gca,'XTickLabel',a.choiceLabels,'XTick',[1:8]);
+
+    saveas(fig,fullfile(pathname,'notPresentMeanTimeoutMice'),'pdf');
+
+
 
 %% TIMEOUT/LEAVING SUMMARY BY MOUSE
 
@@ -914,30 +938,30 @@ end
                 NPT=NPT(~isnan(NPT));
                 prefsT=prefsT(~isnan(prefsT));
 
-x=NP;
-y=prefs;
-p = polyfit(x,y,1);
-yfit = polyval(p,x);
-yresid = y - yfit;
-SSresid = sum(yresid.^2);
-SStotal = (length(y)-1) * var(y);
-rsq = 1 - SSresid/SStotal;
-plot(x,yfit,'Color','m');
-
-xT=NPT;
-yT=prefsT;
-pT = polyfit(xT,yT,1);
-yfitT = polyval(pT,xT);
-yresidT = yT - yfitT;
-SSresidT = sum(yresidT.^2);
-SStotalT = (length(yT)-1) * var(yT);
-rsqT = 1 - SSresidT/SStotalT;
-plot(xT,yfitT,'Color','c');
+% x=NP;
+% y=prefs;
+% p = polyfit(x,y,1);
+% yfit = polyval(p,x);
+% yresid = y - yfit;
+% SSresid = sum(yresid.^2);
+% SStotal = (length(y)-1) * var(y);
+% rsq = 1 - SSresid/SStotal;
+% plot(x,yfit,'Color','m');
+% 
+% xT=NPT;
+% yT=prefsT;
+% pT = polyfit(xT,yT,1);
+% yfitT = polyval(pT,xT);
+% yresidT = yT - yfitT;
+% SSresidT = sum(yresidT.^2);
+% SStotalT = (length(yT)-1) * var(yT);
+% rsqT = 1 - SSresidT/SStotalT;
+% plot(xT,yfitT,'Color','c');
 
 
 ylabel({'P(choose info)'}); %{'Info choice', 'probability'}
-xlabel({'P(NOT present in port on info small)'});
-title('Mean choice of information vs. probability of leaving on low-value info trials, PER SESSION');
+xlabel({'P(NOT present in port on Info No Water)'});
+title('Information Preference vs. probability of leaving on Info No Water trials, PER SESSION');
 
 hold off;
 
@@ -992,25 +1016,25 @@ for mm = 1:numel(a.reverseMice)
     end
 end
 
-x=rr;
-y=prefs;
-p = polyfit(x,y,1);
-yfit = polyval(p,x);
-yresid = y - yfit;
-SSresid = sum(yresid.^2);
-SStotal = (length(y)-1) * var(y);
-rsq = 1 - SSresid/SStotal;
-plot(x,yfit,'Color','m');
-
-xT=rrT;
-yT=prefsT;
-pT = polyfit(xT,yT,1);
-yfitT = polyval(pT,xT);
-yresidT = yT - yfitT;
-SSresidT = sum(yresidT.^2);
-SStotalT = (length(yT)-1) * var(yT);
-rsqT = 1 - SSresidT/SStotalT;
-plot(xT,yfitT,'Color','c');
+% x=rr;
+% y=prefs;
+% p = polyfit(x,y,1);
+% yfit = polyval(p,x);
+% yresid = y - yfit;
+% SSresid = sum(yresid.^2);
+% SStotal = (length(y)-1) * var(y);
+% rsq = 1 - SSresid/SStotal;
+% plot(x,yfit,'Color','m');
+% 
+% xT=rrT;
+% yT=prefsT;
+% pT = polyfit(xT,yT,1);
+% yfitT = polyval(pT,xT);
+% yresidT = yT - yfitT;
+% SSresidT = sum(yresidT.^2);
+% SStotalT = (length(yT)-1) * var(yT);
+% rsqT = 1 - SSresidT/SStotalT;
+% plot(xT,yfitT,'Color','c');
 
 
 % [fit2, gof2]=fit(rrT', prefsT','poly1');
@@ -1019,7 +1043,7 @@ plot(xT,yfitT,'Color','c');
 
 ylabel({'P(choose info)'}); %{'Info choice', 'probability'}
 xlabel({'Reward Rate Info / Reward Rate No Info'});
-title('Mean choice of information vs. relative info reward rate, PER SESSION');
+title('Information Preference vs. relative Info reward rate, PER SESSION');
 
 hold off;
 
@@ -1181,19 +1205,24 @@ if ~isempty(a.reverseMice)
     ax.FontSize = 8;
     ax.YTick = [0 0.25 0.50 0.75 1];
     ax.YLim = [0 1];
-    ax.XLim = [0.5 3.5];
-    ax.XTick = [1 2 3];
+    ax.XLim = [0.5 4.5];
+    ax.XTick = [1 2 3 4];
     
-    for n=1:3
+    for n=1:4
        plot(n,nanmean(a.reversalPrefs(:,n)),'Color','k','LineWidth',2,'Marker','o','MarkerFaceColor','k','MarkerSize',10); 
        errorbar(n,nanmean(a.reversalPrefs(:,n)),sem(a.reversalPrefs(:,n)),'Color','k','LineWidth',2,'CapSize',100);
     end
     for m = 1:numel(a.reverseMice)
-%         if ~isnan(a.reversalPrefs(m,3))
-            plot(a.reversalPrefs(m,:),'Color',grey,'LineStyle',':','LineWidth',2,'Marker','o','MarkerFaceColor',grey);
-%         end
+        mm = a.reverseMice(m);
+        if ~isnan(a.reversalPrefs(m,3))
+            if ismember(mm,a.timeoutMice)
+            plot(a.reversalPrefs(m,:),'Color','m','LineStyle',':','LineWidth',2,'Marker','o','MarkerFaceColor',grey);
+            else
+            plot(a.reversalPrefs(m,:),'Color','c','LineStyle',':','LineWidth',2,'Marker','o','MarkerFaceColor',grey);                
+            end
+        end
     end
-    reverseLabels = {'Pre-reversal','Reversal','Post-reversal'};
+    reverseLabels = {'Info on Side 1','Info on Side 2','Info on Side 1','Info on Side 2'};
     set(gca,'XTickLabel',reverseLabels);
     ylabel({'% choice of', 'initial info side'});
     
@@ -1214,19 +1243,24 @@ if ~isempty(a.reverseMice)
     ax.FontSize = 8;
 %     ax.YTick = [0 0.25 0.50 0.75 1];
 %     ax.YLim = [0 1];
-    ax.XLim = [0.5 3.5];
-    ax.XTick = [1 2 3];
+    ax.XLim = [0.5 4.5];
+    ax.XTick = [1 2 3 4];
     
-    for n=1:3
+    for n=1:4
        plot(n,nanmean(a.reversalRxn(:,n)),'Color','k','LineWidth',2,'Marker','o','MarkerFaceColor','k','MarkerSize',10); 
        errorbar(n,nanmean(a.reversalRxn(:,n)),sem(a.reversalRxn(:,n)),'Color','k','LineWidth',2,'CapSize',100);
     end
     for m = 1:numel(a.reverseMice)
+        mm = a.reverseMice(m);
         if ~isnan(a.reversalPrefs(m,3))
-            plot(a.reversalRxn(m,:),'Color',grey,'LineStyle',':','LineWidth',2,'Marker','o','MarkerFaceColor',grey);
+            if ismember(mm,a.timeoutMice)
+            plot(a.reversalRxn(m,:),'Color','m','LineStyle',':','LineWidth',2,'Marker','o','MarkerFaceColor',grey);
+            else 
+            plot(a.reversalRxn(m,:),'Color','c','LineStyle',':','LineWidth',2,'Marker','o','MarkerFaceColor',grey);
+            end
         end
     end
-    reverseLabels = {'Pre-reversal','Reversal','Post-reversal'};
+    reverseLabels = {'Info on Side 1','Info on Side 2','Info on Side 1','Info on Side 2'};
     set(gca,'XTickLabel',reverseLabels);
     ylabel('Reaction Speed Index');
     

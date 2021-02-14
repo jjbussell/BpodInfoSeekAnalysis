@@ -930,7 +930,7 @@ if ~isempty(a.reverseMice)
     a.reversalMultiPrefs = NaN(numel(a.reverseMice),8);
     for m = 1:numel(a.reverseMice)
         mm = a.reverseMice(m);
-        for n = 1:3
+        for n = 1:4
             if ~isnan(a.reversalDays(m,n))
                 day = a.reversalDays(m,n);
             else
