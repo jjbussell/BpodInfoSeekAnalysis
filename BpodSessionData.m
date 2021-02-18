@@ -240,16 +240,17 @@ for ff = 1:numFiles
        a.mouse = [a.mouse; b.mouse];
        a.day = [a.day; b.day];
        
-       if or(sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0,sum(ismember(fields(b.trialSettings),fields(a.trialSettings))==0)>0)
-           if sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0
+%        if or(sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0,sum(ismember(fields(b.trialSettings),fields(a.trialSettings))==0)>0)
+           if sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0 % if current file is missing a field in other files
                afields=fields(a.trialSettings);
                fieldnames = afields(ismember(fields(a.trialSettings),fields(b.trialSettings))==0);
                for i = 1:numel(fieldnames)
                    for n = 1:size(b.trialSettings,1)
                     b.trialSettings(n).(fieldnames{i})=[];
                    end
-               end           
-           else
+               end
+           end
+           if sum(ismember(fields(b.trialSettings),fields(a.trialSettings))==0)>0
                bfields=fields(b.trialSettings);
                fieldnames = bfields(ismember(fields(b.trialSettings),fields(a.trialSettings))==0);    
                for i = 1:numel(fieldnames)
@@ -258,7 +259,7 @@ for ff = 1:numFiles
                    end
                end             
            end
-       end
+%        end
        a.trialSettings = [a.trialSettings; b.trialSettings];
        
        a.trialType = [a.trialType; b.trialType];

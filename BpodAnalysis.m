@@ -194,7 +194,7 @@ a.odorDtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorDLeft(:,1))) | (~isnan(a.ri
 %% REVERSAL
 
 a.reverseDay = cell(a.mouseCt,3);
-a.reverse = NaN(numel(a.file),1);
+a.reverse = zeros(numel(a.file),1);
 a.choiceMice = zeros(a.mouseCt,1);
 a.reverseMice = zeros(a.mouseCt,1);
 a.reverseTypes = [1 -1 2 -2];
@@ -1068,9 +1068,19 @@ for m=1:a.mouseCt
     
 %     okAll = a.mice(:,m)==1 & a.reverse~= 0;
     okAll = a.mice(:,m)==1;
-    a.rewardRate(m,1) = nansum(a.reward(a.info == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 1 & okAll == 1))/1000/60);
-    a.rewardRate(m,2) = nansum(a.reward(a.info == 0 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 0 & okAll == 1))/1000/60);
+    a.rewardRate(m,1) = nansum(a.reward(a.info == 1 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 1 & okAll == 1))/60);
+    a.rewardRate(m,2) = nansum(a.reward(a.info == 0 & okAll == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 0 & okAll == 1))/60);
     a.rewardDiff(m,1) = a.rewardRate(m,1) - a.rewardRate(m,2);
+    a.rewardIdx(m,1) = a.rewardRate(m,1)/a.rewardRate(m,2);
+    
+    if ismember(m,a.reverseMice)
+        mm=find(a.reverseMice==m);
+        okPref = a.mice(:,m)==1 & a.reverse~= 0;
+        a.rewardRatePrefDays(mm,1) = nansum(a.reward(a.info == 1 & okPref == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 1 & okPref == 1))/60);
+        a.rewardRatePrefDays(mm,2) = nansum(a.reward(a.info == 0 & okPref == 1)) / (nansum(a.trialLengthCenterEntry(a.info == 0 & okPref == 1))/60);
+        a.rewardDiffPrefDays(mm,1) = a.rewardRatePrefDays(mm,1) - a.rewardRatePrefDays(mm,2);
+        a.rewardIdxPrefDays(mm,1) = a.rewardRatePrefDays(mm,1) / a.rewardRatePrefDays(mm,2);
+    end
 end
 
 %%
