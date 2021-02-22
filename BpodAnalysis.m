@@ -336,11 +336,17 @@ a.randCorrTrials = a.info == 0 & a.correct == 1;
 
 %% LEAVING TIMEOUT
 
+
 a.timeoutGrace(:,1) = sum(~isnan(a.TimeoutGraceLeft),2)/2;
 a.timeoutGrace(:,2) = sum(~isnan(a.TimeoutGraceRight),2)/2;
-a.timeout = ~isnan(a.LeavingTimeout(:,1));
 a.timeoutTime = NaN(a.trialCt,1);
-a.timeoutTime(~isnan(a.timeout)) = a.LeavingTimeout(~isnan(a.timeout),2)-a.LeavingTimeout(~isnan(a.timeout),1);
+if ~isempty(a.LeavingTimeout)
+    a.timeout = ~isnan(a.LeavingTimeout(:,1));
+    a.timeoutTime(~isnan(a.timeout)) = a.LeavingTimeout(~isnan(a.timeout),2)-a.LeavingTimeout(~isnan(a.timeout),1);    
+else
+    a.timeout = zeros(size(a.LeavingTimeout,1),1);    
+end
+
 for t = 1:a.trialCt
     if ~isempty(a.trialSettings(t).Timeout)
         a.timeoutParam(t,1) = a.trialSettings(t).Timeout;
@@ -351,6 +357,8 @@ end
 
 a.timeoutMiceList = unique(a.mouse(a.timeoutParam>0&a.trialTypes>4)); % do >3 to include 370/for future
 a.timeoutMice = find(ismember(a.mouseList,a.timeoutMiceList));
+    
+
 
 %% ERRORS
 
