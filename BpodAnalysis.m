@@ -42,7 +42,10 @@ end
 % % eventList = a.eventList;
 % eventList = eventsToExpand;
 eventList = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End',...
-    'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out'};
+        'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out',...
+        'DIO1_LeftLick_Hi', 'DIO1_LeftLick_Lo', 'DIO1_CenterLick_Hi',...
+        'DIO1_CenterLick_Lo','DIO1_RightLick_Hi', 'DIO1_RightLick_Lo',..
+        'GlobalTimer5_End','GlobalTimer6_End'};
 
 for e = 1:numel(eventList)
 
