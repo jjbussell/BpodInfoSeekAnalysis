@@ -44,7 +44,7 @@ end
 eventList = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End',...
         'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out',...
         'DIO1_LeftLick_Hi', 'DIO1_LeftLick_Lo', 'DIO1_CenterLick_Hi',...
-        'DIO1_CenterLick_Lo','DIO1_RightLick_Hi', 'DIO1_RightLick_Lo',..
+        'DIO1_CenterLick_Lo','DIO1_RightLick_Hi', 'DIO1_RightLick_Lo',...
         'GlobalTimer5_End','GlobalTimer6_End'};
 
 for e = 1:numel(eventList)
@@ -343,6 +343,7 @@ a.randCorrTrials = a.info == 0 & a.correct == 1;
 a.timeoutGrace(:,1) = sum(~isnan(a.TimeoutGraceLeft),2)/2;
 a.timeoutGrace(:,2) = sum(~isnan(a.TimeoutGraceRight),2)/2;
 a.timeoutTime = NaN(a.trialCt,1);
+
 if ~isempty(a.LeavingTimeout)
     a.timeout = ~isnan(a.LeavingTimeout(:,1));
     a.timeoutTime(~isnan(a.timeout)) = a.LeavingTimeout(~isnan(a.timeout),2)-a.LeavingTimeout(~isnan(a.timeout),1);    
@@ -350,8 +351,9 @@ else
     a.timeout = zeros(size(a.LeavingTimeout,1),1);    
 end
 
+
 for t = 1:a.trialCt
-    if ~isempty(a.trialSettings(t).Timeout)
+    if ~isempty(a.LeavingTimeout)
         a.timeoutParam(t,1) = a.trialSettings(t).Timeout;
     else
         a.timeoutParam(t,1) = 0;
@@ -360,8 +362,6 @@ end
 
 a.timeoutMiceList = unique(a.mouse(a.timeoutParam>0&a.trialTypes>4)); % do >3 to include 370/for future
 a.timeoutMice = find(ismember(a.mouseList,a.timeoutMiceList));
-    
-
 
 %% ERRORS
 

@@ -408,6 +408,8 @@ for mm = 1:numel(a.currentMice)
 end
 
 %%
+
+if ~isempty(a.timeoutMice)
     figure();
     fig = gcf;
     fig.PaperUnits = 'inches';
@@ -432,6 +434,7 @@ end
 
     figure();
     violinplot(a.incomplete(a.timeoutMice,:),a.choiceLabels);
+end
 
 %% TIMEOUT/LEAVING SUMMARY BY MOUSE
 
