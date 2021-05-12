@@ -38,8 +38,8 @@ close all;
 
 %% LOAD DATA
 
-loadData = 1;
-% loadData = 0;
+% loadData = 1;
+loadData = 0;
 
 if loadData == 1
     fname = 'infoSeekBpodData.mat';
@@ -216,7 +216,10 @@ for ff = 1:numFiles
         'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out',...
         'DIO1_LeftLick_Hi', 'DIO1_LeftLick_Lo', 'DIO1_CenterLick_Hi',...
         'DIO1_CenterLick_Lo','DIO1_RightLick_Hi', 'DIO1_RightLick_Lo',...
-        'GlobalTimer5_End','GlobalTimer6_End'};
+        'GlobalCounter5_End','GlobalCounter6_End',...
+        'DIODOORS1_LeftLick_Hi', 'DIODOORS1_LeftLick_Lo', 'DIODOORS1_CenterLick_Hi',...
+        'DIODOORS1_CenterLick_Lo','DIODOORS1_RightLick_Hi', 'DIODOORS1_RightLick_Lo',...
+        'BNC1High','BNC1Low'};
     for t = 1:SessionData.nTrials
         for s = 1:numel(stateList)
             if isfield(b.trialData(t).States,(stateList{s}))
