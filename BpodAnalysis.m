@@ -73,7 +73,7 @@ for i = 1:size(eventList,2)
    if size(event,1)<a.trialCt
        a.(arvname{1}) = event;
        eventSize = size(event);
-       tempEvent = NaN(a.trialCt,size(event,2));
+       tempEvent = cell(a.trialCt,size(event,2));
        tempEvent(a.trialCt-eventSize(1)+1:end,:) = event;
        a.(e{1}) = tempEvent;
    end
@@ -1110,10 +1110,10 @@ for m=1:a.mouseCt
 end
 
 %%
-save('infoSeekBpodDataAnalyzed.mat','a');
+save('infoSeekBpodDataAnalyzed.mat','a','-v7.3');
 % uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
-save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
+save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a','-v7.3');
 
 gmail;
 
