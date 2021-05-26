@@ -38,11 +38,10 @@ end
 
 %% EXPAND EVENTS
 
-% eventsToExpand = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End','GlobalTimer4_End'};
-% % eventList = a.eventList;
-% eventList = eventsToExpand;
-eventList = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer3_End',...
-    'GlobalTimer4_End','Port1In','Port1Out','Port2In','Port2Out','Port3In','Port3Out',...
+eventList = {'GlobalTimer3_Start','GlobalTimer4_Start','GlobalTimer7_Start',...
+    'GlobalTimer8_Start','GlobalTimer3_End','GlobalTimer4_End',...
+    'GlobalTimer7_End','GlobalTimer8_End','Port1In','Port1Out',...
+    'Port2In','Port2Out','Port3In','Port3Out',...
     'DIO1_LeftLick_Hi', 'DIO1_LeftLick_Lo', 'DIO1_CenterLick_Hi',...
     'DIO1_CenterLick_Lo','DIO1_RightLick_Hi', 'DIO1_RightLick_Lo',...
     'GlobalCounter5_End','GlobalCounter6_End',...
@@ -65,6 +64,19 @@ for e = 1:numel(eventList)
     a.(eventname) = result2;
     result = [];
     result2 = [];
+end
+
+for i = 1:size(eventList,2)
+   e = eventList(i); 
+   event = a.(e{1});
+   arvname = strcat(e,'_archive');
+   if size(event,1)<a.trialCt
+       a.(arvname{1}) = event;
+       eventSize = size(event);
+       tempEvent = NaN(a.trialCt,size(event,2));
+       tempEvent(a.trialCt-eventSize(1)+1:end,:) = event;
+       a.(e{1}) = tempEvent;
+   end
 end
 
 
@@ -1098,10 +1110,10 @@ for m=1:a.mouseCt
 end
 
 %%
-save('infoSeekBpodDataAnalyzed.mat','a','-v7.3');
+save('infoSeekBpodDataAnalyzed.mat','a');
 % uisave({'a'},'infoSeekBpodDataAnalyzed.mat');
 
-save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a','-v7.3');
+save(['infoSeekBpodDataAnalyzed' datestr(now,'yyyymmdd')],'a');
 
 gmail;
 
