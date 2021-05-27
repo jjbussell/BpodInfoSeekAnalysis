@@ -255,7 +255,7 @@ for ff = 1:numFiles
        a.file = [a.file; b.file];
        a.mouse = [a.mouse; b.mouse];
        a.day = [a.day; b.day];
-%        a.trial = [a.trial; b.trial];
+       a.trial = [a.trial; b.trial];
        
 %        if or(sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0,sum(ismember(fields(b.trialSettings),fields(a.trialSettings))==0)>0)
            if sum(ismember(fields(a.trialSettings),fields(b.trialSettings))==0)>0 % if current file is missing a field in other files
