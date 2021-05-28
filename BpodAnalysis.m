@@ -204,10 +204,18 @@ a.rewardDelay = [a.trialSettings.RewardDelay]';
 
 %% SIDE ODOR
 
+a.odor2 = [a.OdorALeft(:,1) a.OdorBLeft(:,1) a.OdorCLeft(:,1) a.OdorDLeft(:,1)...
+    a.OdorARight(:,1) a.OdorBRight(:,1) a.OdorCRight(:,1) a.OdorDRight(:,1)...
+    a.TimeoutOdor(:,1)];
+odor2tp = a.odor2';
+a.odor2On = odor2tp(~isnan(odor2tp));
+
 a.odorAtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorALeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorARight(:,1)));
 a.odorBtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorBLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorBRight(:,1)));
 a.odorCtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorCLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorCRight(:,1)));
 a.odorDtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorDLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorDRight(:,1)));
+
+%% CENTER ENTRIES AND EXITS
 
 %% REVERSAL
 
