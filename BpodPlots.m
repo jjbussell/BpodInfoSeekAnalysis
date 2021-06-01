@@ -1602,7 +1602,7 @@ end
     
     %% initial pref vs initial reward rate
 if ~isempty(a.reverseMice)
-    fig = figure();
+fig = figure();
 fig.PaperUnits = 'inches';
 fig.PaperPosition = [0.5 0.5 10 7];
 set(fig,'renderer','painters');
@@ -1629,3 +1629,96 @@ hold off;
 saveas(fig,fullfile(pathname,'InitPrefbyreward'),'pdf');
 %     close(fig); 
 end
+
+%% LICK RASTER ON MOST RECENT DAY
+
+% add if correct or not - leave out no choice/trim to trial length
+% reverse Y axis
+% add odor, go cue, outcome time
+% save
+
+% for each mouse
+% for mm = 1:sum(a.headfixed)
+%     m=a.headfixedMice(mm);
+m = 6;
+
+mousetrials = a.mice(:,m)==1 & a.mouseDay==a.mouseDayCt(m);
+mousetrialtypes = a.trialType(mousetrials);
+
+if a.initinfoside == 0
+    infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+    randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
+else
+    randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
+    infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+end
+
+infotrialct = sum(mousetrialtypes==2);
+randtrialct = sum(mousetrialtypes==3);
+infoidx = find(mousetrialtypes==2);
+randidx = find(mousetrialtypes==3);
+
+fig = figure();
+fig.PaperUnits = 'inches';
+fig.PaperPosition = [0.5 0.5 10 7];
+set(fig,'renderer','painters');
+set(fig,'PaperOrientation','landscape');
+
+
+% info trials
+ax = nsubplot(1,2,1,1);
+ax.FontSize = 8;
+ax.YLim = [0 infotrialct+1];
+ax.XLim = [0 10];
+hold on;
+
+for tt = 1:infotrialct
+   t=infoidx(tt);
+   infolicks =  infoLicksAll(t,:);
+   randlicks = randLicksAll(t,:);
+   xx = [infolicks;infolicks];
+   yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
+   xx2 = [randlicks;randlicks];
+   yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
+   plot(xx,yy,'k');
+   plot(xx2,yy2,'r');  
+end
+title('Info Trial Licks');
+xlabel('Time in Trial');
+ylabel('Trial');
+
+% rand trials
+ax = nsubplot(1,2,1,2);
+ax.FontSize = 8;
+ax.YLim = [0 randtrialct+1];
+ax.XLim = [0 10];
+hold on;
+
+for tt = 1:randtrialct
+   t=randidx(tt);
+   infolicks =  infoLicksAll(t,:);
+   randlicks = randLicksAll(t,:);
+   xx = [infolicks;infolicks];
+   yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
+   xx2 = [randlicks;randlicks];
+   yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
+   plot(xx,yy,'r');
+   plot(xx2,yy2,'k');  
+end
+title('No Info Trial Licks');
+xlabel('Time in Trial');
+ylabel('Trial');
+
+ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
+title(a.mouseList(m));
+
+% end
+
+
+
+
+
+
+
+
+

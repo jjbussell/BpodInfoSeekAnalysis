@@ -217,6 +217,12 @@ a.odorDtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorDLeft(:,1))) | (~isnan(a.ri
 
 %% CENTER ENTRIES AND EXITS
 
+exitDiff=a.Port2Out-a.GoCue(:,1);
+exitDiff(exitDiff<0)=inf;
+[~,indA]=min(exitDiff,[],2);
+indB=sub2ind(size(a.Port2Out),(1:size(a.Port2Out,1))',indA);
+a.centerExitGo = a.Port2Out(indB);
+
 %% REVERSAL
 
 a.reverseDay = cell(a.mouseCt,3);
@@ -310,6 +316,14 @@ a.reverseMiceList  = a.mouseList(a.reverseMice);
 
 a.imagingMice = zeros(a.mouseCt,1);
 
+a.headfixed = zeros(a.mouseCt,1);
+for m = 1:a.mouseCt
+    if contains(a.files(find(a.fileDay==a.mouseDayCt(m)&a.fileMouse==m,1,'last')).protocol,'Headfixed')
+        a.headfixed(m) = 1;
+    end
+end
+a.headfixedMice = find(a.headfixed);
+
 %% REACTION TIME AND TRIAL LENGTH
 
 % IN SECONDS
@@ -392,6 +406,7 @@ a.centerEntryCount = sum(~isnan(a.CenterOdor),2)/2;
 a.completeInitiation = a.centerEntryCount == 1;
 
 % doesn't include NP (NP info small is not an error)-->NOW IT DOES!
+% NP info small is outcome 5 and 14
 % how to check if timeout or not?!?
 
 a.infoCorrCodes = [11 13];
