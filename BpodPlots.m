@@ -1645,7 +1645,7 @@ m = 6;
 mousetrials = a.mice(:,m)==1 & a.mouseDay==a.mouseDayCt(m);
 mousetrialtypes = a.trialType(mousetrials);
 
-if a.initinfoside == 0
+if a.initinfoside(m) == 0
     infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
     randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
 else
@@ -1657,6 +1657,13 @@ infotrialct = sum(mousetrialtypes==2);
 randtrialct = sum(mousetrialtypes==3);
 infoidx = find(mousetrialtypes==2);
 randidx = find(mousetrialtypes==3);
+
+% 
+% f = find(a.fileDay == a.mouseDayCt(m),1,'first');
+% settings = a.files(f).settings;
+% odor1time = settings.Interval;
+% odor2time = odor1time + settings.CenterOdorTime + 
+% outcometime
 
 fig = figure();
 fig.PaperUnits = 'inches';
@@ -1670,6 +1677,7 @@ ax = nsubplot(1,2,1,1);
 ax.FontSize = 8;
 ax.YLim = [0 infotrialct+1];
 ax.XLim = [0 10];
+set(ax, 'Ydir', 'reverse')
 hold on;
 
 for tt = 1:infotrialct
@@ -1683,7 +1691,7 @@ for tt = 1:infotrialct
    plot(xx,yy,'k');
    plot(xx2,yy2,'r');  
 end
-title('Info Trial Licks');
+title({a.mouseList{m}; 'Info Trial Licks'});
 xlabel('Time in Trial');
 ylabel('Trial');
 
@@ -1692,6 +1700,7 @@ ax = nsubplot(1,2,1,2);
 ax.FontSize = 8;
 ax.YLim = [0 randtrialct+1];
 ax.XLim = [0 10];
+set(ax, 'Ydir', 'reverse')
 hold on;
 
 for tt = 1:randtrialct
@@ -1705,7 +1714,7 @@ for tt = 1:randtrialct
    plot(xx,yy,'r');
    plot(xx2,yy2,'k');  
 end
-title('No Info Trial Licks');
+title({title(a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')});'No Info Trial Licks'});
 xlabel('Time in Trial');
 ylabel('Trial');
 
