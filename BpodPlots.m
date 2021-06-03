@@ -1648,13 +1648,13 @@ mousetrialtypes = a.trialType(mousetrials);
 if a.initinfoside(m) == 0
     infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
     randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
-    infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:);
-    randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:);    
+    infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
+    randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);     
 else
-    randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
-    infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
-    randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:);
-    infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:);    
+    randLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+    infoLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
+    randLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
+    infoLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
 end
 
 infotrialct = sum(mousetrialtypes==2);
@@ -1662,12 +1662,14 @@ randtrialct = sum(mousetrialtypes==3);
 infoidx = find(mousetrialtypes==2);
 randidx = find(mousetrialtypes==3);
 
-% 
-% f = find(a.fileDay == a.mouseDayCt(m),1,'first');
-% settings = a.files(f).settings;
-% odor1time = settings.Interval;
-% odor2time = odor1time + settings.CenterOdorTime + 
-% outcometime
+
+f = find(a.fileDay == a.mouseDayCt(m),1,'first');
+settings = a.files(f).settings;
+odor1time = settings.Interval+0.5+settings.CenterDelay;
+odor2time = odor1time + settings.CenterOdorTime + ...
+    settings.StartDelay + 0.05 + settings.OdorDelay;
+outcometime = odor2time + 0.5 + settings.OdorTime + settings.RewardDelay;
+
 
 fig = figure();
 fig.PaperUnits = 'inches';
@@ -1694,6 +1696,9 @@ for tt = 1:infotrialct
    yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
    plot(xx,yy,'k');
    plot(xx2,yy2,'r');  
+   plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+   plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+
 end
 title({a.mouseList{m}; 'Info Trial Licks'});
 xlabel('Time in Trial');
