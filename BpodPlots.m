@@ -1648,9 +1648,13 @@ mousetrialtypes = a.trialType(mousetrials);
 if a.initinfoside(m) == 0
     infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
     randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
+    infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+    randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:);    
 else
     randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
     infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+    randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:);
+    infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:);    
 end
 
 infotrialct = sum(mousetrialtypes==2);

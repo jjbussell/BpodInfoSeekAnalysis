@@ -409,12 +409,12 @@ a.completeInitiation = a.centerEntryCount == 1;
 % NP info small is outcome 5 and 14
 % how to check if timeout or not?!?
 
-a.infoCorrCodes = [11 13];
-a.infoIncorrCodes = [10 12 14 15];
+a.infoCorrCodes = [11 13 14];
+a.infoIncorrCodes = [10 12 15];
 a.randCorrCodes = [17 19];
 a.randIncorrCodes = [16 18 20 21];
-a.choiceCorrCodes = [2 4 6 8];
-a.choiceIncorrCodes = [1 3 5 7 9];    
+a.choiceCorrCodes = [2 4 5 6 8];
+a.choiceIncorrCodes = [1 3 7 9];    
 
 a.infoForcedCorr = ismember(a.outcome,a.infoCorrCodes);
 a.infoForcedIncorr = ismember(a.outcome,a.infoIncorrCodes);
