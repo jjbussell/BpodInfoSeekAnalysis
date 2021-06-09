@@ -1637,100 +1637,198 @@ end
 % add odor, go cue, outcome time
 % save
 
-% for each mouse
-% for mm = 1:sum(a.headfixed)
-%     m=a.headfixedMice(mm);
 m = 6;
+% for each mouse
+for mm = 1:sum(a.headfixed)
+    m=a.headfixedMice(mm);
 
-mousetrials = a.mice(:,m)==1 & a.mouseDay==a.mouseDayCt(m);
-mousetrialtypes = a.trialType(mousetrials);
+    mousetrials = a.mice(:,m)==1 & a.mouseDay==a.mouseDayCt(m);
+    mousetrialtypes = a.trialType(mousetrials);
 
-if a.initinfoside(m) == 0
-    infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
-    randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
-    infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
-    randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);     
-else
-    randLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
-    infoLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
-    randLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
-    infoLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
+    if a.initinfoside(m) == 0
+        infoLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+        randLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
+        infoLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
+        randLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);     
+    else
+        randLicksAll = a.DIO1_LeftLick_Hi(mousetrials==1,:);
+        infoLicksAll = a.DIO1_RightLick_Hi(mousetrials==1,:);
+        randLicksRel = a.DIO1_LeftLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
+        infoLicksRel = a.DIO1_RightLick_Hi(mousetrials==1,:)-a.choice(mousetrials==1,1);
+    end
+
+    infotrialct = sum(mousetrialtypes==2);
+    randtrialct = sum(mousetrialtypes==3);
+    infoidx = find(mousetrialtypes==2);
+    randidx = find(mousetrialtypes==3);
+    mouseinfotrials = find(mousetrials==1 & a.trialType == 2);
+    mouserandtrials = find(mousetrials==1 & a.trialType == 3);
+
+
+    f = find(a.fileDay == a.mouseDayCt(m)&a.fileMouse==m,1,'first');
+    settings = a.files(f).settings;
+    odor1time = settings.Interval+0.5+settings.CenterDelay;
+    gocuetime =odor1time + settings.CenterOdorTime + ...
+        settings.StartDelay + 0.05;
+    odor2time = gocuetime + settings.OdorDelay;
+    outcometime = odor2time + 0.5 + settings.OdorTime + settings.RewardDelay;
+
+    infocenters = [ones(sum(a.correct(mouseinfotrials)),1)*outcometime+2.5 find(a.correct(mouseinfotrials))];
+    inforadii = ones(sum(a.correct(mouseinfotrials)),1)*0.05;
+    infocorr = a.correct(mouseinfotrials);
+    randcenters = [ones(sum(a.correct(mouserandtrials)),1)*outcometime+2.5 find(a.correct(mouserandtrials))];
+    randradii = ones(sum(a.correct(mouserandtrials)),1)*0.05;
+    randcorr = a.correct(mouserandtrials);
+
+
+    fig = figure();
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0.5 0.5 10 7];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','landscape');
+
+
+    % info trials
+    ax = nsubplot(1,2,1,1);
+    ax.FontSize = 8;
+    ax.YLim = [0 infotrialct+1];
+    % ax.YLim = [0 21];
+    ax.XLim = [0 outcometime+3];
+    set(ax, 'Ydir', 'reverse')
+    hold on;
+
+    for tt = 1:infotrialct
+    % for tt = 1:20
+       t=infoidx(tt);
+       infolicks =  infoLicksAll(t,:);
+       randlicks = randLicksAll(t,:);
+       xx = [infolicks;infolicks];
+       yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
+       xx2 = [randlicks;randlicks];
+       yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];
+       if infocorr(tt)==1
+          plot(xx,yy,'g');
+       else
+          plot(xx,yy,'k'); 
+       end
+       plot(xx2,yy2,'r');  
+    end
+    plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    plot([gocuetime gocuetime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    viscircles(infocenters,inforadii,'Color','g');
+    title({a.mouseList{m}; 'Info Trial Licks'});
+    xlabel('Time in Trial');
+    ylabel('Trial');
+
+    % rand trials
+    ax = nsubplot(1,2,1,2);
+    ax.FontSize = 8;
+    ax.YLim = [0 randtrialct+1];
+    ax.XLim = [0 outcometime+3];
+    set(ax, 'Ydir', 'reverse')
+    hold on;
+
+    for tt = 1:randtrialct
+       t=randidx(tt);
+       infolicks =  infoLicksAll(t,:);
+       randlicks = randLicksAll(t,:);
+       xx = [infolicks;infolicks];
+       yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
+       xx2 = [randlicks;randlicks];
+       yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
+       plot(xx,yy,'r');
+      if randcorr(tt)==1
+          plot(xx2,yy2,'g');
+       else
+          plot(xx2,yy2,'k'); 
+       end   
+    end
+    plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    plot([gocuetime gocuetime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    viscircles(randcenters,randradii,'Color','g');
+    title({a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')}; 'No Info Trial Licks'});
+    xlabel('Time in Trial');
+    ylabel('Trial');
+
+    saveas(fig,fullfile(pathname,['lickRaster' a.mouseList{m}]),'pdf');
+
+
+    fig = figure();
+    fig.PaperUnits = 'inches';
+    fig.PaperPosition = [0.5 0.5 10 7];
+    set(fig,'renderer','painters');
+    set(fig,'PaperOrientation','landscape');
+
+
+    % info trials
+    ax = nsubplot(1,2,1,1);
+    ax.FontSize = 8;
+    ax.YLim = [0 infotrialct+1];
+    % ax.YLim = [0 21];
+    ax.XLim = [-10 10];
+    set(ax, 'Ydir', 'reverse')
+    hold on;
+
+    for tt = 1:infotrialct
+    % for tt = 1:20
+       t=infoidx(tt);
+       infolicks =  infoLicksRel(t,:);
+       randlicks = randLicksRel(t,:);
+       xx = [infolicks;infolicks];
+       yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
+       xx2 = [randlicks;randlicks];
+       yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];
+       if infocorr(tt)==1
+          plot(xx,yy,'g');
+       else
+          plot(xx,yy,'k'); 
+       end
+       plot(xx2,yy2,'r');  
+    end
+    % plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    % plot([gocuetime gocuetime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    % plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    % viscircles(infocenters,inforadii,'Color','g');
+    title({a.mouseList{m}; 'Info Trial Licks'});
+    xlabel('Time in Trial');
+    ylabel('Trial');
+
+    % rand trials
+    ax = nsubplot(1,2,1,2);
+    ax.FontSize = 8;
+    ax.YLim = [0 randtrialct+1];
+    ax.XLim = [-10 10];
+    set(ax, 'Ydir', 'reverse')
+    hold on;
+
+    for tt = 1:randtrialct
+       t=randidx(tt);
+       infolicks =  infoLicksRel(t,:);
+       randlicks = randLicksRel(t,:);
+       xx = [infolicks;infolicks];
+       yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
+       xx2 = [randlicks;randlicks];
+       yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
+       plot(xx,yy,'r');
+      if randcorr(tt)==1
+          plot(xx2,yy2,'g');
+       else
+          plot(xx2,yy2,'k'); 
+       end   
+    end
+    % plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    % plot([gocuetime gocuetime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    % plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
+    % viscircles(randcenters,randradii,'Color','g');
+    title({a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')}; 'No Info Trial Licks'});
+    xlabel('Time Relative to Choice');
+    ylabel('Trial');
+
+    saveas(fig,fullfile(pathname,['lickRasterRelChoice' a.mouseList{m}]),'pdf');
+
 end
-
-infotrialct = sum(mousetrialtypes==2);
-randtrialct = sum(mousetrialtypes==3);
-infoidx = find(mousetrialtypes==2);
-randidx = find(mousetrialtypes==3);
-
-
-f = find(a.fileDay == a.mouseDayCt(m),1,'first');
-settings = a.files(f).settings;
-odor1time = settings.Interval+0.5+settings.CenterDelay;
-odor2time = odor1time + settings.CenterOdorTime + ...
-    settings.StartDelay + 0.05 + settings.OdorDelay;
-outcometime = odor2time + 0.5 + settings.OdorTime + settings.RewardDelay;
-
-
-fig = figure();
-fig.PaperUnits = 'inches';
-fig.PaperPosition = [0.5 0.5 10 7];
-set(fig,'renderer','painters');
-set(fig,'PaperOrientation','landscape');
-
-
-% info trials
-ax = nsubplot(1,2,1,1);
-ax.FontSize = 8;
-ax.YLim = [0 infotrialct+1];
-ax.XLim = [0 10];
-set(ax, 'Ydir', 'reverse')
-hold on;
-
-for tt = 1:infotrialct
-   t=infoidx(tt);
-   infolicks =  infoLicksAll(t,:);
-   randlicks = randLicksAll(t,:);
-   xx = [infolicks;infolicks];
-   yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
-   xx2 = [randlicks;randlicks];
-   yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
-   plot(xx,yy,'k');
-   plot(xx2,yy2,'r');  
-   plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
-   plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
-
-end
-title({a.mouseList{m}; 'Info Trial Licks'});
-xlabel('Time in Trial');
-ylabel('Trial');
-
-% rand trials
-ax = nsubplot(1,2,1,2);
-ax.FontSize = 8;
-ax.YLim = [0 randtrialct+1];
-ax.XLim = [0 10];
-set(ax, 'Ydir', 'reverse')
-hold on;
-
-for tt = 1:randtrialct
-   t=randidx(tt);
-   infolicks =  infoLicksAll(t,:);
-   randlicks = randLicksAll(t,:);
-   xx = [infolicks;infolicks];
-   yy = [ones(size(infolicks))*(tt-0.4);ones(size(infolicks))*(tt+0.4)];
-   xx2 = [randlicks;randlicks];
-   yy2 = [ones(size(randlicks))*(tt-0.4);ones(size(randlicks))*(tt+0.4)];   
-   plot(xx,yy,'r');
-   plot(xx2,yy2,'k');  
-end
-title({title(a.fileDayCell{find(a.fileMouse == m & a.fileDay == a.mouseDayCt(m),1,'first')});'No Info Trial Licks'});
-xlabel('Time in Trial');
-ylabel('Trial');
-
-ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0  1],'Box','off','Visible','off','Units','normalized', 'clipping' , 'off');
-title(a.mouseList(m));
-
-% end
 
 
 

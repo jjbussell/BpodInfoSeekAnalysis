@@ -9,6 +9,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% TRIAL COUNT
+
+a.trialCt = numel(a.trialType);
+
 %% EXPAND MULTIPLE STATE OCCURRANCES
 
 % state = a.WaitForCenter;
@@ -85,9 +89,6 @@ end
 a.infoSide = [a.trialSettings.InfoSide]';
 a.trialTypes = [a.trialSettings.TrialTypes]';
 
-%% TRIAL COUNT
-
-a.trialCt = numel(a.trialType);
 
 %% DAY AND MOUSE
 
