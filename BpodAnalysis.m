@@ -78,7 +78,7 @@ for i = 1:size(eventList,2)
        a.(arvname{1}) = event;
        eventSize = size(event);
        tempEvent = cell(a.trialCt,size(event,2));
-       tempEvent(a.trialCt-eventSize(1)+1:end,:) = event;
+       tempEvent(a.trialCt-eventSize(1)+1:end,:) = num2cell(event);
        a.(e{1}) = tempEvent;
    end
 end
