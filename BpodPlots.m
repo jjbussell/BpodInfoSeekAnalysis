@@ -1752,7 +1752,7 @@ for mm = 1:sum(a.headfixed)
     xlabel('Time in Trial');
     ylabel('Trial');
 
-    saveas(fig,fullfile(pathname,['lickRaster' a.mouseList{m}]),'pdf');
+    saveas(fig,fullfile(pathname,['lickRaster' a.mouseList{m} datestr(now,'yyyymmdd')]),'pdf');
 
 
     fig = figure();
@@ -1792,7 +1792,7 @@ for mm = 1:sum(a.headfixed)
     % plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
     % viscircles(infocenters,inforadii,'Color','g');
     title({a.mouseList{m}; 'Info Trial Licks'});
-    xlabel('Time in Trial');
+    xlabel('Time Relative to Choice');
     ylabel('Trial');
 
     % rand trials
@@ -1826,7 +1826,7 @@ for mm = 1:sum(a.headfixed)
     xlabel('Time Relative to Choice');
     ylabel('Trial');
 
-    saveas(fig,fullfile(pathname,['lickRasterRelChoice' a.mouseList{m}]),'pdf');
+    saveas(fig,fullfile(pathname,['lickRasterRelChoice' a.mouseList{m} datestr(now,'yyyymmdd')]),'pdf');
 
 end
 
