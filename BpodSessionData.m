@@ -74,7 +74,7 @@ for ff = 1:numFiles
             files(ff) = [];
             ff = ff+1;
             filename = files(ff).name;
-            numFiles = numFiles - 1;
+            numFiles = numFiles - 1; 
         end
         f = numel(a.files) + ff;
     else
@@ -350,7 +350,7 @@ end
 save('infoSeekBpodData.mat','a','-v7.3');
 % uisave({'a'},'infoSeekFSMData.mat');
 
-save(['infoSeekBpodData' datestr(now,'yyyymmdd')],'a','-v7.3');
+% save(['infoSeekBpodData' datestr(now,'yyyymmdd')],'a','-v7.3');
 
 
 

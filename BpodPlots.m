@@ -1667,6 +1667,7 @@ for mm = 1:sum(a.headfixed)
 
     f = find(a.fileDay == a.mouseDayCt(m)&a.fileMouse==m,1,'first');
     settings = a.files(f).settings;
+    starttime = settings.Interval;
     odor1time = settings.Interval+0.5+settings.CenterDelay;
     gocuetime =odor1time + settings.CenterOdorTime + ...
         settings.StartDelay + 0.05;
@@ -1713,6 +1714,7 @@ for mm = 1:sum(a.headfixed)
        end
        plot(xx2,yy2,'r');  
     end
+    plot([starttime starttime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
     plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
     plot([gocuetime gocuetime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
     plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
@@ -1725,7 +1727,7 @@ for mm = 1:sum(a.headfixed)
     ax = nsubplot(1,2,1,2);
     ax.FontSize = 8;
     ax.YLim = [0 randtrialct+1];
-    ax.XLim = [0 outcometime+3];
+    ax.XLim = [0 outcometime+5];
     set(ax, 'Ydir', 'reverse')
     hold on;
 
@@ -1744,6 +1746,7 @@ for mm = 1:sum(a.headfixed)
           plot(xx2,yy2,'k'); 
        end   
     end
+    plot([starttime starttime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);    
     plot([odor1time odor1time],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
     plot([gocuetime gocuetime],[-10000000 1000000],'k','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
     plot([outcometime outcometime],[-10000000 1000000],'c','yliminclude','off','color',[0.6 0.6 0.6],'LineWidth',2);
