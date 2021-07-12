@@ -216,6 +216,12 @@ a.odorBtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorBLeft(:,1))) | (~isnan(a.ri
 a.odorCtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorCLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorCRight(:,1)));
 a.odorDtrials = (~isnan(a.leftChoice) & ~isnan(a.OdorDLeft(:,1))) | (~isnan(a.rightChoice) & ~isnan(a.OdorDRight(:,1)));
 
+a.odor2type = NaN(a.trialCt,1);
+a.odor2type(a.odorAtrials==1)=1;
+a.odor2type(a.odorBtrials==1)=2;
+a.odor2type(a.odorCtrials==1)=3;
+a.odor2type(a.odorDtrials==1)=4;
+
 %% CENTER ENTRIES AND EXITS
 
 exitDiff=a.Port2Out-a.GoCue(:,1);
@@ -974,8 +980,8 @@ end
 %% CHOICE, RXN SPEED, EARLY LICKS, AND REWARD RATE AROUND REVERSALS BY IIS
 
 if ~isempty(a.reverseMice)
-    a.reversalPrefs = NaN(numel(a.reverseMice),3);
-    a.reversalRxn = NaN(numel(a.reverseMice),3);
+    a.reversalPrefs = NaN(numel(a.reverseMice),4);
+    a.reversalRxn = NaN(numel(a.reverseMice),4);
 %     a.reversalLicks = NaN(numel(a.reverseMice),3);
     a.reversalMultiPrefs = NaN(numel(a.reverseMice),8);
     for m = 1:numel(a.reverseMice)

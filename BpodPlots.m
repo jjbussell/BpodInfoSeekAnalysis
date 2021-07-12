@@ -705,7 +705,7 @@ if ~isempty(a.reverseMice)
 %         dy = a.beta(m,2) - a.betaCI(m,2) + 0.02;
         text(a.beta(m,1),a.beta(m,2) + 0.1,a.reverseMiceList{mm},'HorizontalAlignment','center');
     end
-    scatter(a.beta(:,1),a.beta(:,2),'filled','FaceColor','k')
+    scatter(a.beta(:,1),a.beta(:,2),'filled','MarkerFaceColor','k');
     plot([-10000000 1000000],[0 0],'color',[0.2 0.2 0.2],'linewidth',0.25,'yliminclude','off','xliminclude','off');
     plot([0 0],[-10000000 1000000],'color',[0.2 0.2 0.2],'linewidth',0.25,'yliminclude','off','xliminclude','off');
     ylabel({'Info preference', '(log odds biasing to currently informative side'}); %{'Info choice', 'probability'}
@@ -966,12 +966,12 @@ for mm = 1:numel(a.reverseMice)
 
         NP = [NP a.choiceDayRewardRateIdx{mm,:}];      
 
-        scatter(a.choiceDayInfoSmallNP{mm,:},a.choiceDayPref{mm,:},'filled','FaceColor','m');
+        scatter(a.choiceDayInfoSmallNP{mm,:},a.choiceDayPref{mm,:},'filled','MarkerFaceColor','m');
     else
         prefsT = [prefsT a.choiceDayPref{mm,:}];
         NPT = [NPT a.choiceDayRewardRateIdx{mm,:}];
         
-        scatter(a.choiceDayInfoSmallNP{mm,:},a.choiceDayPref{mm,:},'filled','FaceColor','c');
+        scatter(a.choiceDayInfoSmallNP{mm,:},a.choiceDayPref{mm,:},'filled','MarkerFaceColor','c');
     end
 end
 
@@ -1050,11 +1050,11 @@ for mm = 1:numel(a.reverseMice)
         rr = [rr a.choiceDayRewardRateIdx{mm,:}];
 %         [fit1, gof1]=fit(rr', prefs','poly1');
 %         plot(fit1,rr,prefs);
-        scatter(rr,prefs,'filled','FaceColor','m');
+        scatter(rr,prefs,'filled','MarkerFaceColor','m');
     else
         prefsT = [prefs a.choiceDayPref{mm,:}];
         rrT = [rr a.choiceDayRewardRateIdx{mm,:}];        
-        scatter(rrT,prefsT,'filled','FaceColor','c');
+        scatter(rrT,prefsT,'filled','MarkerFaceColor','c');
     end
 end
 
@@ -1251,7 +1251,7 @@ if ~isempty(a.reverseMice)
     ax.XTick = [1 2 3 4];
     
     for n=1:4
-       plot(n,nanmean(a.reversalPrefs(:,n)),'Color','k','LineWidth',2,'Marker','o','MarkerFaceColor','k','MarkerSize',10); 
+       plot(n,nanmean(n),'Color','k','LineWidth',2,'Marker','o','MarkerFaceColor','k','MarkerSize',10); 
        errorbar(n,nanmean(a.reversalPrefs(:,n)),sem(a.reversalPrefs(:,n)),'Color','k','LineWidth',2,'CapSize',100);
     end
     for m = 1:numel(a.reverseMice)
